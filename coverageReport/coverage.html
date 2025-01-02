@@ -1,0 +1,2538 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>v5: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/golang-jwt/jwt/v5/ecdsa.go (84.4%)</option>
+				
+				<option value="file1">github.com/golang-jwt/jwt/v5/ecdsa_utils.go (66.7%)</option>
+				
+				<option value="file2">github.com/golang-jwt/jwt/v5/ed25519.go (78.3%)</option>
+				
+				<option value="file3">github.com/golang-jwt/jwt/v5/ed25519_utils.go (75.0%)</option>
+				
+				<option value="file4">github.com/golang-jwt/jwt/v5/errors.go (100.0%)</option>
+				
+				<option value="file5">github.com/golang-jwt/jwt/v5/errors_go1_20.go (100.0%)</option>
+				
+				<option value="file6">github.com/golang-jwt/jwt/v5/hmac.go (85.2%)</option>
+				
+				<option value="file7">github.com/golang-jwt/jwt/v5/map_claims.go (97.1%)</option>
+				
+				<option value="file8">github.com/golang-jwt/jwt/v5/none.go (92.3%)</option>
+				
+				<option value="file9">github.com/golang-jwt/jwt/v5/parser.go (96.3%)</option>
+				
+				<option value="file10">github.com/golang-jwt/jwt/v5/parser_option.go (83.3%)</option>
+				
+				<option value="file11">github.com/golang-jwt/jwt/v5/registered_claims.go (83.3%)</option>
+				
+				<option value="file12">github.com/golang-jwt/jwt/v5/request/extractor.go (86.4%)</option>
+				
+				<option value="file13">github.com/golang-jwt/jwt/v5/request/oauth2.go (66.7%)</option>
+				
+				<option value="file14">github.com/golang-jwt/jwt/v5/request/request.go (75.0%)</option>
+				
+				<option value="file15">github.com/golang-jwt/jwt/v5/rsa.go (86.7%)</option>
+				
+				<option value="file16">github.com/golang-jwt/jwt/v5/rsa_pss.go (84.4%)</option>
+				
+				<option value="file17">github.com/golang-jwt/jwt/v5/rsa_utils.go (84.1%)</option>
+				
+				<option value="file18">github.com/golang-jwt/jwt/v5/signing_method.go (61.5%)</option>
+				
+				<option value="file19">github.com/golang-jwt/jwt/v5/test/helpers.go (42.4%)</option>
+				
+				<option value="file20">github.com/golang-jwt/jwt/v5/token.go (76.5%)</option>
+				
+				<option value="file21">github.com/golang-jwt/jwt/v5/types.go (86.8%)</option>
+				
+				<option value="file22">github.com/golang-jwt/jwt/v5/validator.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package jwt
+
+import (
+        "crypto"
+        "crypto/ecdsa"
+        "crypto/rand"
+        "errors"
+        "math/big"
+)
+
+var (
+        // Sadly this is missing from crypto/ecdsa compared to crypto/rsa
+        ErrECDSAVerification = errors.New("crypto/ecdsa: verification error")
+)
+
+// SigningMethodECDSA implements the ECDSA family of signing methods.
+// Expects *ecdsa.PrivateKey for signing and *ecdsa.PublicKey for verification
+type SigningMethodECDSA struct {
+        Name      string
+        Hash      crypto.Hash
+        KeySize   int
+        CurveBits int
+}
+
+// Specific instances for EC256 and company
+var (
+        SigningMethodES256 *SigningMethodECDSA
+        SigningMethodES384 *SigningMethodECDSA
+        SigningMethodES512 *SigningMethodECDSA
+)
+
+func init() <span class="cov8" title="1">{
+        // ES256
+        SigningMethodES256 = &amp;SigningMethodECDSA{"ES256", crypto.SHA256, 32, 256}
+        RegisterSigningMethod(SigningMethodES256.Alg(), func() SigningMethod </span><span class="cov8" title="1">{
+                return SigningMethodES256
+        }</span>)
+
+        // ES384
+        <span class="cov8" title="1">SigningMethodES384 = &amp;SigningMethodECDSA{"ES384", crypto.SHA384, 48, 384}
+        RegisterSigningMethod(SigningMethodES384.Alg(), func() SigningMethod </span><span class="cov8" title="1">{
+                return SigningMethodES384
+        }</span>)
+
+        // ES512
+        <span class="cov8" title="1">SigningMethodES512 = &amp;SigningMethodECDSA{"ES512", crypto.SHA512, 66, 521}
+        RegisterSigningMethod(SigningMethodES512.Alg(), func() SigningMethod </span><span class="cov8" title="1">{
+                return SigningMethodES512
+        }</span>)
+}
+
+func (m *SigningMethodECDSA) Alg() string <span class="cov8" title="1">{
+        return m.Name
+}</span>
+
+// Verify implements token verification for the SigningMethod.
+// For this verify method, key must be an ecdsa.PublicKey struct
+func (m *SigningMethodECDSA) Verify(signingString string, sig []byte, key interface{}) error <span class="cov8" title="1">{
+        // Get the key
+        var ecdsaKey *ecdsa.PublicKey
+        switch k := key.(type) </span>{
+        case *ecdsa.PublicKey:<span class="cov8" title="1">
+                ecdsaKey = k</span>
+        default:<span class="cov0" title="0">
+                return newError("ECDSA verify expects *ecdsa.PublicKey", ErrInvalidKeyType)</span>
+        }
+
+        <span class="cov8" title="1">if len(sig) != 2*m.KeySize </span><span class="cov8" title="1">{
+                return ErrECDSAVerification
+        }</span>
+
+        <span class="cov8" title="1">r := big.NewInt(0).SetBytes(sig[:m.KeySize])
+        s := big.NewInt(0).SetBytes(sig[m.KeySize:])
+
+        // Create hasher
+        if !m.Hash.Available() </span><span class="cov0" title="0">{
+                return ErrHashUnavailable
+        }</span>
+        <span class="cov8" title="1">hasher := m.Hash.New()
+        hasher.Write([]byte(signingString))
+
+        // Verify the signature
+        if verifystatus := ecdsa.Verify(ecdsaKey, hasher.Sum(nil), r, s); verifystatus </span><span class="cov8" title="1">{
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">return ErrECDSAVerification</span>
+}
+
+// Sign implements token signing for the SigningMethod.
+// For this signing method, key must be an ecdsa.PrivateKey struct
+func (m *SigningMethodECDSA) Sign(signingString string, key interface{}) ([]byte, error) <span class="cov8" title="1">{
+        // Get the key
+        var ecdsaKey *ecdsa.PrivateKey
+        switch k := key.(type) </span>{
+        case *ecdsa.PrivateKey:<span class="cov8" title="1">
+                ecdsaKey = k</span>
+        default:<span class="cov0" title="0">
+                return nil, newError("ECDSA sign expects *ecdsa.PrivateKey", ErrInvalidKeyType)</span>
+        }
+
+        // Create the hasher
+        <span class="cov8" title="1">if !m.Hash.Available() </span><span class="cov0" title="0">{
+                return nil, ErrHashUnavailable
+        }</span>
+
+        <span class="cov8" title="1">hasher := m.Hash.New()
+        hasher.Write([]byte(signingString))
+
+        // Sign the string and return r, s
+        if r, s, err := ecdsa.Sign(rand.Reader, ecdsaKey, hasher.Sum(nil)); err == nil </span><span class="cov8" title="1">{
+                curveBits := ecdsaKey.Curve.Params().BitSize
+
+                if m.CurveBits != curveBits </span><span class="cov0" title="0">{
+                        return nil, ErrInvalidKey
+                }</span>
+
+                <span class="cov8" title="1">keyBytes := curveBits / 8
+                if curveBits%8 &gt; 0 </span><span class="cov8" title="1">{
+                        keyBytes += 1
+                }</span>
+
+                // We serialize the outputs (r and s) into big-endian byte arrays
+                // padded with zeros on the left to make sure the sizes work out.
+                // Output must be 2*keyBytes long.
+                <span class="cov8" title="1">out := make([]byte, 2*keyBytes)
+                r.FillBytes(out[0:keyBytes]) // r is assigned to the first half of output.
+                s.FillBytes(out[keyBytes:])  // s is assigned to the second half of output.
+
+                return out, nil</span>
+        } else<span class="cov0" title="0"> {
+                return nil, err
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package jwt
+
+import (
+        "crypto/ecdsa"
+        "crypto/x509"
+        "encoding/pem"
+        "errors"
+)
+
+var (
+        ErrNotECPublicKey  = errors.New("key is not a valid ECDSA public key")
+        ErrNotECPrivateKey = errors.New("key is not a valid ECDSA private key")
+)
+
+// ParseECPrivateKeyFromPEM parses a PEM encoded Elliptic Curve Private Key Structure
+func ParseECPrivateKeyFromPEM(key []byte) (*ecdsa.PrivateKey, error) <span class="cov8" title="1">{
+        var err error
+
+        // Parse PEM block
+        var block *pem.Block
+        if block, _ = pem.Decode(key); block == nil </span><span class="cov0" title="0">{
+                return nil, ErrKeyMustBePEMEncoded
+        }</span>
+
+        // Parse the key
+        <span class="cov8" title="1">var parsedKey interface{}
+        if parsedKey, err = x509.ParseECPrivateKey(block.Bytes); err != nil </span><span class="cov0" title="0">{
+                if parsedKey, err = x509.ParsePKCS8PrivateKey(block.Bytes); err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+        }
+
+        <span class="cov8" title="1">var pkey *ecdsa.PrivateKey
+        var ok bool
+        if pkey, ok = parsedKey.(*ecdsa.PrivateKey); !ok </span><span class="cov0" title="0">{
+                return nil, ErrNotECPrivateKey
+        }</span>
+
+        <span class="cov8" title="1">return pkey, nil</span>
+}
+
+// ParseECPublicKeyFromPEM parses a PEM encoded PKCS1 or PKCS8 public key
+func ParseECPublicKeyFromPEM(key []byte) (*ecdsa.PublicKey, error) <span class="cov8" title="1">{
+        var err error
+
+        // Parse PEM block
+        var block *pem.Block
+        if block, _ = pem.Decode(key); block == nil </span><span class="cov0" title="0">{
+                return nil, ErrKeyMustBePEMEncoded
+        }</span>
+
+        // Parse the key
+        <span class="cov8" title="1">var parsedKey interface{}
+        if parsedKey, err = x509.ParsePKIXPublicKey(block.Bytes); err != nil </span><span class="cov0" title="0">{
+                if cert, err := x509.ParseCertificate(block.Bytes); err == nil </span><span class="cov0" title="0">{
+                        parsedKey = cert.PublicKey
+                }</span> else<span class="cov0" title="0"> {
+                        return nil, err
+                }</span>
+        }
+
+        <span class="cov8" title="1">var pkey *ecdsa.PublicKey
+        var ok bool
+        if pkey, ok = parsedKey.(*ecdsa.PublicKey); !ok </span><span class="cov0" title="0">{
+                return nil, ErrNotECPublicKey
+        }</span>
+
+        <span class="cov8" title="1">return pkey, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package jwt
+
+import (
+        "crypto"
+        "crypto/ed25519"
+        "crypto/rand"
+        "errors"
+)
+
+var (
+        ErrEd25519Verification = errors.New("ed25519: verification error")
+)
+
+// SigningMethodEd25519 implements the EdDSA family.
+// Expects ed25519.PrivateKey for signing and ed25519.PublicKey for verification
+type SigningMethodEd25519 struct{}
+
+// Specific instance for EdDSA
+var (
+        SigningMethodEdDSA *SigningMethodEd25519
+)
+
+func init() <span class="cov8" title="1">{
+        SigningMethodEdDSA = &amp;SigningMethodEd25519{}
+        RegisterSigningMethod(SigningMethodEdDSA.Alg(), func() SigningMethod </span><span class="cov8" title="1">{
+                return SigningMethodEdDSA
+        }</span>)
+}
+
+func (m *SigningMethodEd25519) Alg() string <span class="cov8" title="1">{
+        return "EdDSA"
+}</span>
+
+// Verify implements token verification for the SigningMethod.
+// For this verify method, key must be an ed25519.PublicKey
+func (m *SigningMethodEd25519) Verify(signingString string, sig []byte, key interface{}) error <span class="cov8" title="1">{
+        var ed25519Key ed25519.PublicKey
+        var ok bool
+
+        if ed25519Key, ok = key.(ed25519.PublicKey); !ok </span><span class="cov0" title="0">{
+                return newError("Ed25519 verify expects ed25519.PublicKey", ErrInvalidKeyType)
+        }</span>
+
+        <span class="cov8" title="1">if len(ed25519Key) != ed25519.PublicKeySize </span><span class="cov0" title="0">{
+                return ErrInvalidKey
+        }</span>
+
+        // Verify the signature
+        <span class="cov8" title="1">if !ed25519.Verify(ed25519Key, []byte(signingString), sig) </span><span class="cov8" title="1">{
+                return ErrEd25519Verification
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+// Sign implements token signing for the SigningMethod.
+// For this signing method, key must be an ed25519.PrivateKey
+func (m *SigningMethodEd25519) Sign(signingString string, key interface{}) ([]byte, error) <span class="cov8" title="1">{
+        var ed25519Key crypto.Signer
+        var ok bool
+
+        if ed25519Key, ok = key.(crypto.Signer); !ok </span><span class="cov0" title="0">{
+                return nil, newError("Ed25519 sign expects crypto.Signer", ErrInvalidKeyType)
+        }</span>
+
+        <span class="cov8" title="1">if _, ok := ed25519Key.Public().(ed25519.PublicKey); !ok </span><span class="cov0" title="0">{
+                return nil, ErrInvalidKey
+        }</span>
+
+        // Sign the string and return the result. ed25519 performs a two-pass hash
+        // as part of its algorithm. Therefore, we need to pass a non-prehashed
+        // message into the Sign function, as indicated by crypto.Hash(0)
+        <span class="cov8" title="1">sig, err := ed25519Key.Sign(rand.Reader, []byte(signingString), crypto.Hash(0))
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return sig, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package jwt
+
+import (
+        "crypto"
+        "crypto/ed25519"
+        "crypto/x509"
+        "encoding/pem"
+        "errors"
+)
+
+var (
+        ErrNotEdPrivateKey = errors.New("key is not a valid Ed25519 private key")
+        ErrNotEdPublicKey  = errors.New("key is not a valid Ed25519 public key")
+)
+
+// ParseEdPrivateKeyFromPEM parses a PEM-encoded Edwards curve private key
+func ParseEdPrivateKeyFromPEM(key []byte) (crypto.PrivateKey, error) <span class="cov8" title="1">{
+        var err error
+
+        // Parse PEM block
+        var block *pem.Block
+        if block, _ = pem.Decode(key); block == nil </span><span class="cov0" title="0">{
+                return nil, ErrKeyMustBePEMEncoded
+        }</span>
+
+        // Parse the key
+        <span class="cov8" title="1">var parsedKey interface{}
+        if parsedKey, err = x509.ParsePKCS8PrivateKey(block.Bytes); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">var pkey ed25519.PrivateKey
+        var ok bool
+        if pkey, ok = parsedKey.(ed25519.PrivateKey); !ok </span><span class="cov0" title="0">{
+                return nil, ErrNotEdPrivateKey
+        }</span>
+
+        <span class="cov8" title="1">return pkey, nil</span>
+}
+
+// ParseEdPublicKeyFromPEM parses a PEM-encoded Edwards curve public key
+func ParseEdPublicKeyFromPEM(key []byte) (crypto.PublicKey, error) <span class="cov8" title="1">{
+        var err error
+
+        // Parse PEM block
+        var block *pem.Block
+        if block, _ = pem.Decode(key); block == nil </span><span class="cov0" title="0">{
+                return nil, ErrKeyMustBePEMEncoded
+        }</span>
+
+        // Parse the key
+        <span class="cov8" title="1">var parsedKey interface{}
+        if parsedKey, err = x509.ParsePKIXPublicKey(block.Bytes); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">var pkey ed25519.PublicKey
+        var ok bool
+        if pkey, ok = parsedKey.(ed25519.PublicKey); !ok </span><span class="cov0" title="0">{
+                return nil, ErrNotEdPublicKey
+        }</span>
+
+        <span class="cov8" title="1">return pkey, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package jwt
+
+import (
+        "errors"
+        "strings"
+)
+
+var (
+        ErrInvalidKey                = errors.New("key is invalid")
+        ErrInvalidKeyType            = errors.New("key is of invalid type")
+        ErrHashUnavailable           = errors.New("the requested hash function is unavailable")
+        ErrTokenMalformed            = errors.New("token is malformed")
+        ErrTokenUnverifiable         = errors.New("token is unverifiable")
+        ErrTokenSignatureInvalid     = errors.New("token signature is invalid")
+        ErrTokenRequiredClaimMissing = errors.New("token is missing required claim")
+        ErrTokenInvalidAudience      = errors.New("token has invalid audience")
+        ErrTokenExpired              = errors.New("token is expired")
+        ErrTokenUsedBeforeIssued     = errors.New("token used before issued")
+        ErrTokenInvalidIssuer        = errors.New("token has invalid issuer")
+        ErrTokenInvalidSubject       = errors.New("token has invalid subject")
+        ErrTokenNotValidYet          = errors.New("token is not valid yet")
+        ErrTokenInvalidId            = errors.New("token has invalid id")
+        ErrTokenInvalidClaims        = errors.New("token has invalid claims")
+        ErrInvalidType               = errors.New("invalid type for claim")
+)
+
+// joinedError is an error type that works similar to what [errors.Join]
+// produces, with the exception that it has a nice error string; mainly its
+// error messages are concatenated using a comma, rather than a newline.
+type joinedError struct {
+        errs []error
+}
+
+func (je joinedError) Error() string <span class="cov8" title="1">{
+        msg := []string{}
+        for _, err := range je.errs </span><span class="cov8" title="1">{
+                msg = append(msg, err.Error())
+        }</span>
+
+        <span class="cov8" title="1">return strings.Join(msg, ", ")</span>
+}
+
+// joinErrors joins together multiple errors. Useful for scenarios where
+// multiple errors next to each other occur, e.g., in claims validation.
+func joinErrors(errs ...error) error <span class="cov8" title="1">{
+        return &amp;joinedError{
+                errs: errs,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">//go:build go1.20
+// +build go1.20
+
+package jwt
+
+import (
+        "fmt"
+)
+
+// Unwrap implements the multiple error unwrapping for this error type, which is
+// possible in Go 1.20.
+func (je joinedError) Unwrap() []error <span class="cov8" title="1">{
+        return je.errs
+}</span>
+
+// newError creates a new error message with a detailed error message. The
+// message will be prefixed with the contents of the supplied error type.
+// Additionally, more errors, that provide more context can be supplied which
+// will be appended to the message. This makes use of Go 1.20's possibility to
+// include more than one %w formatting directive in [fmt.Errorf].
+//
+// For example,
+//
+//        newError("no keyfunc was provided", ErrTokenUnverifiable)
+//
+// will produce the error string
+//
+//        "token is unverifiable: no keyfunc was provided"
+func newError(message string, err error, more ...error) error <span class="cov8" title="1">{
+        var format string
+        var args []any
+        if message != "" </span><span class="cov8" title="1">{
+                format = "%w: %s"
+                args = []any{err, message}
+        }</span> else<span class="cov8" title="1"> {
+                format = "%w"
+                args = []any{err}
+        }</span>
+
+        <span class="cov8" title="1">for _, e := range more </span><span class="cov8" title="1">{
+                format += ": %w"
+                args = append(args, e)
+        }</span>
+
+        <span class="cov8" title="1">err = fmt.Errorf(format, args...)
+        return err</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package jwt
+
+import (
+        "crypto"
+        "crypto/hmac"
+        "errors"
+)
+
+// SigningMethodHMAC implements the HMAC-SHA family of signing methods.
+// Expects key type of []byte for both signing and validation
+type SigningMethodHMAC struct {
+        Name string
+        Hash crypto.Hash
+}
+
+// Specific instances for HS256 and company
+var (
+        SigningMethodHS256  *SigningMethodHMAC
+        SigningMethodHS384  *SigningMethodHMAC
+        SigningMethodHS512  *SigningMethodHMAC
+        ErrSignatureInvalid = errors.New("signature is invalid")
+)
+
+func init() <span class="cov8" title="1">{
+        // HS256
+        SigningMethodHS256 = &amp;SigningMethodHMAC{"HS256", crypto.SHA256}
+        RegisterSigningMethod(SigningMethodHS256.Alg(), func() SigningMethod </span><span class="cov8" title="1">{
+                return SigningMethodHS256
+        }</span>)
+
+        // HS384
+        <span class="cov8" title="1">SigningMethodHS384 = &amp;SigningMethodHMAC{"HS384", crypto.SHA384}
+        RegisterSigningMethod(SigningMethodHS384.Alg(), func() SigningMethod </span><span class="cov8" title="1">{
+                return SigningMethodHS384
+        }</span>)
+
+        // HS512
+        <span class="cov8" title="1">SigningMethodHS512 = &amp;SigningMethodHMAC{"HS512", crypto.SHA512}
+        RegisterSigningMethod(SigningMethodHS512.Alg(), func() SigningMethod </span><span class="cov8" title="1">{
+                return SigningMethodHS512
+        }</span>)
+}
+
+func (m *SigningMethodHMAC) Alg() string <span class="cov8" title="1">{
+        return m.Name
+}</span>
+
+// Verify implements token verification for the SigningMethod. Returns nil if
+// the signature is valid. Key must be []byte.
+//
+// Note it is not advised to provide a []byte which was converted from a 'human
+// readable' string using a subset of ASCII characters. To maximize entropy, you
+// should ideally be providing a []byte key which was produced from a
+// cryptographically random source, e.g. crypto/rand. Additional information
+// about this, and why we intentionally are not supporting string as a key can
+// be found on our usage guide
+// https://golang-jwt.github.io/jwt/usage/signing_methods/#signing-methods-and-key-types.
+func (m *SigningMethodHMAC) Verify(signingString string, sig []byte, key interface{}) error <span class="cov8" title="1">{
+        // Verify the key is the right type
+        keyBytes, ok := key.([]byte)
+        if !ok </span><span class="cov0" title="0">{
+                return newError("HMAC verify expects []byte", ErrInvalidKeyType)
+        }</span>
+
+        // Can we use the specified hashing method?
+        <span class="cov8" title="1">if !m.Hash.Available() </span><span class="cov0" title="0">{
+                return ErrHashUnavailable
+        }</span>
+
+        // This signing method is symmetric, so we validate the signature
+        // by reproducing the signature from the signing string and key, then
+        // comparing that against the provided signature.
+        <span class="cov8" title="1">hasher := hmac.New(m.Hash.New, keyBytes)
+        hasher.Write([]byte(signingString))
+        if !hmac.Equal(sig, hasher.Sum(nil)) </span><span class="cov8" title="1">{
+                return ErrSignatureInvalid
+        }</span>
+
+        // No validation errors.  Signature is good.
+        <span class="cov8" title="1">return nil</span>
+}
+
+// Sign implements token signing for the SigningMethod. Key must be []byte.
+//
+// Note it is not advised to provide a []byte which was converted from a 'human
+// readable' string using a subset of ASCII characters. To maximize entropy, you
+// should ideally be providing a []byte key which was produced from a
+// cryptographically random source, e.g. crypto/rand. Additional information
+// about this, and why we intentionally are not supporting string as a key can
+// be found on our usage guide https://golang-jwt.github.io/jwt/usage/signing_methods/.
+func (m *SigningMethodHMAC) Sign(signingString string, key interface{}) ([]byte, error) <span class="cov8" title="1">{
+        if keyBytes, ok := key.([]byte); ok </span><span class="cov8" title="1">{
+                if !m.Hash.Available() </span><span class="cov0" title="0">{
+                        return nil, ErrHashUnavailable
+                }</span>
+
+                <span class="cov8" title="1">hasher := hmac.New(m.Hash.New, keyBytes)
+                hasher.Write([]byte(signingString))
+
+                return hasher.Sum(nil), nil</span>
+        }
+
+        <span class="cov0" title="0">return nil, newError("HMAC sign expects []byte", ErrInvalidKeyType)</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package jwt
+
+import (
+        "encoding/json"
+        "fmt"
+)
+
+// MapClaims is a claims type that uses the map[string]interface{} for JSON
+// decoding. This is the default claims type if you don't supply one
+type MapClaims map[string]interface{}
+
+// GetExpirationTime implements the Claims interface.
+func (m MapClaims) GetExpirationTime() (*NumericDate, error) <span class="cov8" title="1">{
+        return m.parseNumericDate("exp")
+}</span>
+
+// GetNotBefore implements the Claims interface.
+func (m MapClaims) GetNotBefore() (*NumericDate, error) <span class="cov8" title="1">{
+        return m.parseNumericDate("nbf")
+}</span>
+
+// GetIssuedAt implements the Claims interface.
+func (m MapClaims) GetIssuedAt() (*NumericDate, error) <span class="cov8" title="1">{
+        return m.parseNumericDate("iat")
+}</span>
+
+// GetAudience implements the Claims interface.
+func (m MapClaims) GetAudience() (ClaimStrings, error) <span class="cov8" title="1">{
+        return m.parseClaimsString("aud")
+}</span>
+
+// GetIssuer implements the Claims interface.
+func (m MapClaims) GetIssuer() (string, error) <span class="cov8" title="1">{
+        return m.parseString("iss")
+}</span>
+
+// GetSubject implements the Claims interface.
+func (m MapClaims) GetSubject() (string, error) <span class="cov8" title="1">{
+        return m.parseString("sub")
+}</span>
+
+// parseNumericDate tries to parse a key in the map claims type as a number
+// date. This will succeed, if the underlying type is either a [float64] or a
+// [json.Number]. Otherwise, nil will be returned.
+func (m MapClaims) parseNumericDate(key string) (*NumericDate, error) <span class="cov8" title="1">{
+        v, ok := m[key]
+        if !ok </span><span class="cov8" title="1">{
+                return nil, nil
+        }</span>
+
+        <span class="cov8" title="1">switch exp := v.(type) </span>{
+        case float64:<span class="cov8" title="1">
+                if exp == 0 </span><span class="cov0" title="0">{
+                        return nil, nil
+                }</span>
+
+                <span class="cov8" title="1">return newNumericDateFromSeconds(exp), nil</span>
+        case json.Number:<span class="cov8" title="1">
+                v, _ := exp.Float64()
+
+                return newNumericDateFromSeconds(v), nil</span>
+        }
+
+        <span class="cov8" title="1">return nil, newError(fmt.Sprintf("%s is invalid", key), ErrInvalidType)</span>
+}
+
+// parseClaimsString tries to parse a key in the map claims type as a
+// [ClaimsStrings] type, which can either be a string or an array of string.
+func (m MapClaims) parseClaimsString(key string) (ClaimStrings, error) <span class="cov8" title="1">{
+        var cs []string
+        switch v := m[key].(type) </span>{
+        case string:<span class="cov8" title="1">
+                cs = append(cs, v)</span>
+        case []string:<span class="cov8" title="1">
+                cs = v</span>
+        case []interface{}:<span class="cov8" title="1">
+                for _, a := range v </span><span class="cov8" title="1">{
+                        vs, ok := a.(string)
+                        if !ok </span><span class="cov8" title="1">{
+                                return nil, newError(fmt.Sprintf("%s is invalid", key), ErrInvalidType)
+                        }</span>
+                        <span class="cov8" title="1">cs = append(cs, vs)</span>
+                }
+        }
+
+        <span class="cov8" title="1">return cs, nil</span>
+}
+
+// parseString tries to parse a key in the map claims type as a [string] type.
+// If the key does not exist, an empty string is returned. If the key has the
+// wrong type, an error is returned.
+func (m MapClaims) parseString(key string) (string, error) <span class="cov8" title="1">{
+        var (
+                ok  bool
+                raw interface{}
+                iss string
+        )
+        raw, ok = m[key]
+        if !ok </span><span class="cov8" title="1">{
+                return "", nil
+        }</span>
+
+        <span class="cov8" title="1">iss, ok = raw.(string)
+        if !ok </span><span class="cov8" title="1">{
+                return "", newError(fmt.Sprintf("%s is invalid", key), ErrInvalidType)
+        }</span>
+
+        <span class="cov8" title="1">return iss, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package jwt
+
+// SigningMethodNone implements the none signing method.  This is required by the spec
+// but you probably should never use it.
+var SigningMethodNone *signingMethodNone
+
+const UnsafeAllowNoneSignatureType unsafeNoneMagicConstant = "none signing method allowed"
+
+var NoneSignatureTypeDisallowedError error
+
+type signingMethodNone struct{}
+type unsafeNoneMagicConstant string
+
+func init() <span class="cov8" title="1">{
+        SigningMethodNone = &amp;signingMethodNone{}
+        NoneSignatureTypeDisallowedError = newError("'none' signature type is not allowed", ErrTokenUnverifiable)
+
+        RegisterSigningMethod(SigningMethodNone.Alg(), func() SigningMethod </span><span class="cov8" title="1">{
+                return SigningMethodNone
+        }</span>)
+}
+
+func (m *signingMethodNone) Alg() string <span class="cov8" title="1">{
+        return "none"
+}</span>
+
+// Only allow 'none' alg type if UnsafeAllowNoneSignatureType is specified as the key
+func (m *signingMethodNone) Verify(signingString string, sig []byte, key interface{}) (err error) <span class="cov8" title="1">{
+        // Key must be UnsafeAllowNoneSignatureType to prevent accidentally
+        // accepting 'none' signing method
+        if _, ok := key.(unsafeNoneMagicConstant); !ok </span><span class="cov8" title="1">{
+                return NoneSignatureTypeDisallowedError
+        }</span>
+        // If signing method is none, signature must be an empty string
+        <span class="cov8" title="1">if len(sig) != 0 </span><span class="cov8" title="1">{
+                return newError("'none' signing method with non-empty signature", ErrTokenUnverifiable)
+        }</span>
+
+        // Accept 'none' signing method.
+        <span class="cov8" title="1">return nil</span>
+}
+
+// Only allow 'none' signing if UnsafeAllowNoneSignatureType is specified as the key
+func (m *signingMethodNone) Sign(signingString string, key interface{}) ([]byte, error) <span class="cov8" title="1">{
+        if _, ok := key.(unsafeNoneMagicConstant); ok </span><span class="cov8" title="1">{
+                return []byte{}, nil
+        }</span>
+
+        <span class="cov0" title="0">return nil, NoneSignatureTypeDisallowedError</span>
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package jwt
+
+import (
+        "bytes"
+        "encoding/base64"
+        "encoding/json"
+        "fmt"
+        "strings"
+)
+
+type Parser struct {
+        // If populated, only these methods will be considered valid.
+        validMethods []string
+
+        // Use JSON Number format in JSON decoder.
+        useJSONNumber bool
+
+        // Skip claims validation during token parsing.
+        skipClaimsValidation bool
+
+        validator *Validator
+
+        decodeStrict bool
+
+        decodePaddingAllowed bool
+}
+
+// NewParser creates a new Parser with the specified options
+func NewParser(options ...ParserOption) *Parser <span class="cov8" title="1">{
+        p := &amp;Parser{
+                validator: &amp;Validator{},
+        }
+
+        // Loop through our parsing options and apply them
+        for _, option := range options </span><span class="cov8" title="1">{
+                option(p)
+        }</span>
+
+        <span class="cov8" title="1">return p</span>
+}
+
+// Parse parses, validates, verifies the signature and returns the parsed token.
+// keyFunc will receive the parsed token and should return the key for validating.
+func (p *Parser) Parse(tokenString string, keyFunc Keyfunc) (*Token, error) <span class="cov8" title="1">{
+        return p.ParseWithClaims(tokenString, MapClaims{}, keyFunc)
+}</span>
+
+// ParseWithClaims parses, validates, and verifies like Parse, but supplies a default object implementing the Claims
+// interface. This provides default values which can be overridden and allows a caller to use their own type, rather
+// than the default MapClaims implementation of Claims.
+//
+// Note: If you provide a custom claim implementation that embeds one of the standard claims (such as RegisteredClaims),
+// make sure that a) you either embed a non-pointer version of the claims or b) if you are using a pointer, allocate the
+// proper memory for it before passing in the overall claims, otherwise you might run into a panic.
+func (p *Parser) ParseWithClaims(tokenString string, claims Claims, keyFunc Keyfunc) (*Token, error) <span class="cov8" title="1">{
+        token, parts, err := p.ParseUnverified(tokenString, claims)
+        if err != nil </span><span class="cov8" title="1">{
+                return token, err
+        }</span>
+
+        // Verify signing method is in the required set
+        <span class="cov8" title="1">if p.validMethods != nil </span><span class="cov8" title="1">{
+                var signingMethodValid = false
+                var alg = token.Method.Alg()
+                for _, m := range p.validMethods </span><span class="cov8" title="1">{
+                        if m == alg </span><span class="cov8" title="1">{
+                                signingMethodValid = true
+                                break</span>
+                        }
+                }
+                <span class="cov8" title="1">if !signingMethodValid </span><span class="cov8" title="1">{
+                        // signing method is not in the listed set
+                        return token, newError(fmt.Sprintf("signing method %v is invalid", alg), ErrTokenSignatureInvalid)
+                }</span>
+        }
+
+        // Decode signature
+        <span class="cov8" title="1">token.Signature, err = p.DecodeSegment(parts[2])
+        if err != nil </span><span class="cov8" title="1">{
+                return token, newError("could not base64 decode signature", ErrTokenMalformed, err)
+        }</span>
+        <span class="cov8" title="1">text := strings.Join(parts[0:2], ".")
+
+        // Lookup key(s)
+        if keyFunc == nil </span><span class="cov8" title="1">{
+                // keyFunc was not provided.  short circuiting validation
+                return token, newError("no keyfunc was provided", ErrTokenUnverifiable)
+        }</span>
+
+        <span class="cov8" title="1">got, err := keyFunc(token)
+        if err != nil </span><span class="cov8" title="1">{
+                return token, newError("error while executing keyfunc", ErrTokenUnverifiable, err)
+        }</span>
+
+        <span class="cov8" title="1">switch have := got.(type) </span>{
+        case VerificationKeySet:<span class="cov8" title="1">
+                if len(have.Keys) == 0 </span><span class="cov8" title="1">{
+                        return token, newError("keyfunc returned empty verification key set", ErrTokenUnverifiable)
+                }</span>
+                // Iterate through keys and verify signature, skipping the rest when a match is found.
+                // Return the last error if no match is found.
+                <span class="cov8" title="1">for _, key := range have.Keys </span><span class="cov8" title="1">{
+                        if err = token.Method.Verify(text, token.Signature, key); err == nil </span><span class="cov8" title="1">{
+                                break</span>
+                        }
+                }
+        default:<span class="cov8" title="1">
+                err = token.Method.Verify(text, token.Signature, have)</span>
+        }
+        <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
+                return token, newError("", ErrTokenSignatureInvalid, err)
+        }</span>
+
+        // Validate Claims
+        <span class="cov8" title="1">if !p.skipClaimsValidation </span><span class="cov8" title="1">{
+                // Make sure we have at least a default validator
+                if p.validator == nil </span><span class="cov8" title="1">{
+                        p.validator = NewValidator()
+                }</span>
+
+                <span class="cov8" title="1">if err := p.validator.Validate(claims); err != nil </span><span class="cov8" title="1">{
+                        return token, newError("", ErrTokenInvalidClaims, err)
+                }</span>
+        }
+
+        // No errors so far, token is valid.
+        <span class="cov8" title="1">token.Valid = true
+
+        return token, nil</span>
+}
+
+// ParseUnverified parses the token but doesn't validate the signature.
+//
+// WARNING: Don't use this method unless you know what you're doing.
+//
+// It's only ever useful in cases where you know the signature is valid (since it has already
+// been or will be checked elsewhere in the stack) and you want to extract values from it.
+func (p *Parser) ParseUnverified(tokenString string, claims Claims) (token *Token, parts []string, err error) <span class="cov8" title="1">{
+        parts = strings.Split(tokenString, ".")
+        if len(parts) != 3 </span><span class="cov8" title="1">{
+                return nil, parts, newError("token contains an invalid number of segments", ErrTokenMalformed)
+        }</span>
+
+        <span class="cov8" title="1">token = &amp;Token{Raw: tokenString}
+
+        // parse Header
+        var headerBytes []byte
+        if headerBytes, err = p.DecodeSegment(parts[0]); err != nil </span><span class="cov8" title="1">{
+                return token, parts, newError("could not base64 decode header", ErrTokenMalformed, err)
+        }</span>
+        <span class="cov8" title="1">if err = json.Unmarshal(headerBytes, &amp;token.Header); err != nil </span><span class="cov0" title="0">{
+                return token, parts, newError("could not JSON decode header", ErrTokenMalformed, err)
+        }</span>
+
+        // parse Claims
+        <span class="cov8" title="1">token.Claims = claims
+
+        claimBytes, err := p.DecodeSegment(parts[1])
+        if err != nil </span><span class="cov8" title="1">{
+                return token, parts, newError("could not base64 decode claim", ErrTokenMalformed, err)
+        }</span>
+
+        // If `useJSONNumber` is enabled then we must use *json.Decoder to decode
+        // the claims. However, this comes with a performance penalty so only use
+        // it if we must and, otherwise, simple use json.Unmarshal.
+        <span class="cov8" title="1">if !p.useJSONNumber </span><span class="cov8" title="1">{
+                // JSON Unmarshal. Special case for map type to avoid weird pointer behavior.
+                if c, ok := token.Claims.(MapClaims); ok </span><span class="cov8" title="1">{
+                        err = json.Unmarshal(claimBytes, &amp;c)
+                }</span> else<span class="cov8" title="1"> {
+                        err = json.Unmarshal(claimBytes, &amp;claims)
+                }</span>
+        } else<span class="cov8" title="1"> {
+                dec := json.NewDecoder(bytes.NewBuffer(claimBytes))
+                dec.UseNumber()
+                // JSON Decode. Special case for map type to avoid weird pointer behavior.
+                if c, ok := token.Claims.(MapClaims); ok </span><span class="cov8" title="1">{
+                        err = dec.Decode(&amp;c)
+                }</span> else<span class="cov8" title="1"> {
+                        err = dec.Decode(&amp;claims)
+                }</span>
+        }
+        <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
+                return token, parts, newError("could not JSON decode claim", ErrTokenMalformed, err)
+        }</span>
+
+        // Lookup signature method
+        <span class="cov8" title="1">if method, ok := token.Header["alg"].(string); ok </span><span class="cov8" title="1">{
+                if token.Method = GetSigningMethod(method); token.Method == nil </span><span class="cov0" title="0">{
+                        return token, parts, newError("signing method (alg) is unavailable", ErrTokenUnverifiable)
+                }</span>
+        } else<span class="cov0" title="0"> {
+                return token, parts, newError("signing method (alg) is unspecified", ErrTokenUnverifiable)
+        }</span>
+
+        <span class="cov8" title="1">return token, parts, nil</span>
+}
+
+// DecodeSegment decodes a JWT specific base64url encoding. This function will
+// take into account whether the [Parser] is configured with additional options,
+// such as [WithStrictDecoding] or [WithPaddingAllowed].
+func (p *Parser) DecodeSegment(seg string) ([]byte, error) <span class="cov8" title="1">{
+        encoding := base64.RawURLEncoding
+
+        if p.decodePaddingAllowed </span><span class="cov8" title="1">{
+                if l := len(seg) % 4; l &gt; 0 </span><span class="cov8" title="1">{
+                        seg += strings.Repeat("=", 4-l)
+                }</span>
+                <span class="cov8" title="1">encoding = base64.URLEncoding</span>
+        }
+
+        <span class="cov8" title="1">if p.decodeStrict </span><span class="cov8" title="1">{
+                encoding = encoding.Strict()
+        }</span>
+        <span class="cov8" title="1">return encoding.DecodeString(seg)</span>
+}
+
+// Parse parses, validates, verifies the signature and returns the parsed token.
+// keyFunc will receive the parsed token and should return the cryptographic key
+// for verifying the signature. The caller is strongly encouraged to set the
+// WithValidMethods option to validate the 'alg' claim in the token matches the
+// expected algorithm. For more details about the importance of validating the
+// 'alg' claim, see
+// https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/
+func Parse(tokenString string, keyFunc Keyfunc, options ...ParserOption) (*Token, error) <span class="cov8" title="1">{
+        return NewParser(options...).Parse(tokenString, keyFunc)
+}</span>
+
+// ParseWithClaims is a shortcut for NewParser().ParseWithClaims().
+//
+// Note: If you provide a custom claim implementation that embeds one of the
+// standard claims (such as RegisteredClaims), make sure that a) you either
+// embed a non-pointer version of the claims or b) if you are using a pointer,
+// allocate the proper memory for it before passing in the overall claims,
+// otherwise you might run into a panic.
+func ParseWithClaims(tokenString string, claims Claims, keyFunc Keyfunc, options ...ParserOption) (*Token, error) <span class="cov8" title="1">{
+        return NewParser(options...).ParseWithClaims(tokenString, claims, keyFunc)
+}</span>
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package jwt
+
+import "time"
+
+// ParserOption is used to implement functional-style options that modify the
+// behavior of the parser. To add new options, just create a function (ideally
+// beginning with With or Without) that returns an anonymous function that takes
+// a *Parser type as input and manipulates its configuration accordingly.
+type ParserOption func(*Parser)
+
+// WithValidMethods is an option to supply algorithm methods that the parser
+// will check. Only those methods will be considered valid. It is heavily
+// encouraged to use this option in order to prevent attacks such as
+// https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/.
+func WithValidMethods(methods []string) ParserOption <span class="cov8" title="1">{
+        return func(p *Parser) </span><span class="cov8" title="1">{
+                p.validMethods = methods
+        }</span>
+}
+
+// WithJSONNumber is an option to configure the underlying JSON parser with
+// UseNumber.
+func WithJSONNumber() ParserOption <span class="cov8" title="1">{
+        return func(p *Parser) </span><span class="cov8" title="1">{
+                p.useJSONNumber = true
+        }</span>
+}
+
+// WithoutClaimsValidation is an option to disable claims validation. This
+// option should only be used if you exactly know what you are doing.
+func WithoutClaimsValidation() ParserOption <span class="cov8" title="1">{
+        return func(p *Parser) </span><span class="cov8" title="1">{
+                p.skipClaimsValidation = true
+        }</span>
+}
+
+// WithLeeway returns the ParserOption for specifying the leeway window.
+func WithLeeway(leeway time.Duration) ParserOption <span class="cov8" title="1">{
+        return func(p *Parser) </span><span class="cov8" title="1">{
+                p.validator.leeway = leeway
+        }</span>
+}
+
+// WithTimeFunc returns the ParserOption for specifying the time func. The
+// primary use-case for this is testing. If you are looking for a way to account
+// for clock-skew, WithLeeway should be used instead.
+func WithTimeFunc(f func() time.Time) ParserOption <span class="cov8" title="1">{
+        return func(p *Parser) </span><span class="cov8" title="1">{
+                p.validator.timeFunc = f
+        }</span>
+}
+
+// WithIssuedAt returns the ParserOption to enable verification
+// of issued-at.
+func WithIssuedAt() ParserOption <span class="cov8" title="1">{
+        return func(p *Parser) </span><span class="cov8" title="1">{
+                p.validator.verifyIat = true
+        }</span>
+}
+
+// WithExpirationRequired returns the ParserOption to make exp claim required.
+// By default exp claim is optional.
+func WithExpirationRequired() ParserOption <span class="cov8" title="1">{
+        return func(p *Parser) </span><span class="cov8" title="1">{
+                p.validator.requireExp = true
+        }</span>
+}
+
+// WithAudience configures the validator to require the specified audience in
+// the `aud` claim. Validation will fail if the audience is not listed in the
+// token or the `aud` claim is missing.
+//
+// NOTE: While the `aud` claim is OPTIONAL in a JWT, the handling of it is
+// application-specific. Since this validation API is helping developers in
+// writing secure application, we decided to REQUIRE the existence of the claim,
+// if an audience is expected.
+func WithAudience(aud string) ParserOption <span class="cov8" title="1">{
+        return func(p *Parser) </span><span class="cov8" title="1">{
+                p.validator.expectedAud = aud
+        }</span>
+}
+
+// WithIssuer configures the validator to require the specified issuer in the
+// `iss` claim. Validation will fail if a different issuer is specified in the
+// token or the `iss` claim is missing.
+//
+// NOTE: While the `iss` claim is OPTIONAL in a JWT, the handling of it is
+// application-specific. Since this validation API is helping developers in
+// writing secure application, we decided to REQUIRE the existence of the claim,
+// if an issuer is expected.
+func WithIssuer(iss string) ParserOption <span class="cov0" title="0">{
+        return func(p *Parser) </span><span class="cov0" title="0">{
+                p.validator.expectedIss = iss
+        }</span>
+}
+
+// WithSubject configures the validator to require the specified subject in the
+// `sub` claim. Validation will fail if a different subject is specified in the
+// token or the `sub` claim is missing.
+//
+// NOTE: While the `sub` claim is OPTIONAL in a JWT, the handling of it is
+// application-specific. Since this validation API is helping developers in
+// writing secure application, we decided to REQUIRE the existence of the claim,
+// if a subject is expected.
+func WithSubject(sub string) ParserOption <span class="cov0" title="0">{
+        return func(p *Parser) </span><span class="cov0" title="0">{
+                p.validator.expectedSub = sub
+        }</span>
+}
+
+// WithPaddingAllowed will enable the codec used for decoding JWTs to allow
+// padding. Note that the JWS RFC7515 states that the tokens will utilize a
+// Base64url encoding with no padding. Unfortunately, some implementations of
+// JWT are producing non-standard tokens, and thus require support for decoding.
+func WithPaddingAllowed() ParserOption <span class="cov8" title="1">{
+        return func(p *Parser) </span><span class="cov8" title="1">{
+                p.decodePaddingAllowed = true
+        }</span>
+}
+
+// WithStrictDecoding will switch the codec used for decoding JWTs into strict
+// mode. In this mode, the decoder requires that trailing padding bits are zero,
+// as described in RFC 4648 section 3.5.
+func WithStrictDecoding() ParserOption <span class="cov8" title="1">{
+        return func(p *Parser) </span><span class="cov8" title="1">{
+                p.decodeStrict = true
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package jwt
+
+// RegisteredClaims are a structured version of the JWT Claims Set,
+// restricted to Registered Claim Names, as referenced at
+// https://datatracker.ietf.org/doc/html/rfc7519#section-4.1
+//
+// This type can be used on its own, but then additional private and
+// public claims embedded in the JWT will not be parsed. The typical use-case
+// therefore is to embedded this in a user-defined claim type.
+//
+// See examples for how to use this with your own claim types.
+type RegisteredClaims struct {
+        // the `iss` (Issuer) claim. See https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.1
+        Issuer string `json:"iss,omitempty"`
+
+        // the `sub` (Subject) claim. See https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.2
+        Subject string `json:"sub,omitempty"`
+
+        // the `aud` (Audience) claim. See https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.3
+        Audience ClaimStrings `json:"aud,omitempty"`
+
+        // the `exp` (Expiration Time) claim. See https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.4
+        ExpiresAt *NumericDate `json:"exp,omitempty"`
+
+        // the `nbf` (Not Before) claim. See https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.5
+        NotBefore *NumericDate `json:"nbf,omitempty"`
+
+        // the `iat` (Issued At) claim. See https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.6
+        IssuedAt *NumericDate `json:"iat,omitempty"`
+
+        // the `jti` (JWT ID) claim. See https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.7
+        ID string `json:"jti,omitempty"`
+}
+
+// GetExpirationTime implements the Claims interface.
+func (c RegisteredClaims) GetExpirationTime() (*NumericDate, error) <span class="cov8" title="1">{
+        return c.ExpiresAt, nil
+}</span>
+
+// GetNotBefore implements the Claims interface.
+func (c RegisteredClaims) GetNotBefore() (*NumericDate, error) <span class="cov8" title="1">{
+        return c.NotBefore, nil
+}</span>
+
+// GetIssuedAt implements the Claims interface.
+func (c RegisteredClaims) GetIssuedAt() (*NumericDate, error) <span class="cov8" title="1">{
+        return c.IssuedAt, nil
+}</span>
+
+// GetAudience implements the Claims interface.
+func (c RegisteredClaims) GetAudience() (ClaimStrings, error) <span class="cov0" title="0">{
+        return c.Audience, nil
+}</span>
+
+// GetIssuer implements the Claims interface.
+func (c RegisteredClaims) GetIssuer() (string, error) <span class="cov8" title="1">{
+        return c.Issuer, nil
+}</span>
+
+// GetSubject implements the Claims interface.
+func (c RegisteredClaims) GetSubject() (string, error) <span class="cov8" title="1">{
+        return c.Subject, nil
+}</span>
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package request
+
+import (
+        "errors"
+        "net/http"
+        "strings"
+)
+
+// Errors
+var (
+        ErrNoTokenInRequest = errors.New("no token present in request")
+)
+
+// Extractor is an interface for extracting a token from an HTTP request.
+// The ExtractToken method should return a token string or an error.
+// If no token is present, you must return ErrNoTokenInRequest.
+type Extractor interface {
+        ExtractToken(*http.Request) (string, error)
+}
+
+// HeaderExtractor is an extractor for finding a token in a header.
+// Looks at each specified header in order until there's a match
+type HeaderExtractor []string
+
+func (e HeaderExtractor) ExtractToken(req *http.Request) (string, error) <span class="cov8" title="1">{
+        // loop over header names and return the first one that contains data
+        for _, header := range e </span><span class="cov8" title="1">{
+                if ah := req.Header.Get(header); ah != "" </span><span class="cov8" title="1">{
+                        return ah, nil
+                }</span>
+        }
+        <span class="cov8" title="1">return "", ErrNoTokenInRequest</span>
+}
+
+// ArgumentExtractor extracts a token from request arguments.  This includes a POSTed form or
+// GET URL arguments.  Argument names are tried in order until there's a match.
+// This extractor calls `ParseMultipartForm` on the request
+type ArgumentExtractor []string
+
+func (e ArgumentExtractor) ExtractToken(req *http.Request) (string, error) <span class="cov8" title="1">{
+        // Make sure form is parsed. We are explicitly ignoring errors at this point
+        _ = req.ParseMultipartForm(10e6)
+
+        // loop over arg names and return the first one that contains data
+        for _, arg := range e </span><span class="cov8" title="1">{
+                if ah := req.Form.Get(arg); ah != "" </span><span class="cov8" title="1">{
+                        return ah, nil
+                }</span>
+        }
+
+        <span class="cov0" title="0">return "", ErrNoTokenInRequest</span>
+}
+
+// MultiExtractor tries Extractors in order until one returns a token string or an error occurs
+type MultiExtractor []Extractor
+
+func (e MultiExtractor) ExtractToken(req *http.Request) (string, error) <span class="cov8" title="1">{
+        // loop over header names and return the first one that contains data
+        for _, extractor := range e </span><span class="cov8" title="1">{
+                if tok, err := extractor.ExtractToken(req); tok != "" </span><span class="cov8" title="1">{
+                        return tok, nil
+                }</span> else<span class="cov8" title="1"> if !errors.Is(err, ErrNoTokenInRequest) </span><span class="cov0" title="0">{
+                        return "", err
+                }</span>
+        }
+        <span class="cov0" title="0">return "", ErrNoTokenInRequest</span>
+}
+
+// PostExtractionFilter wraps an Extractor in this to post-process the value before it's handed off.
+// See AuthorizationHeaderExtractor for an example
+type PostExtractionFilter struct {
+        Extractor
+        Filter func(string) (string, error)
+}
+
+func (e *PostExtractionFilter) ExtractToken(req *http.Request) (string, error) <span class="cov8" title="1">{
+        if tok, err := e.Extractor.ExtractToken(req); tok != "" </span><span class="cov8" title="1">{
+                return e.Filter(tok)
+        }</span> else<span class="cov8" title="1"> {
+                return "", err
+        }</span>
+}
+
+// BearerExtractor extracts a token from the Authorization header.
+// The header is expected to match the format "Bearer XX", where "XX" is the
+// JWT token.
+type BearerExtractor struct{}
+
+func (e BearerExtractor) ExtractToken(req *http.Request) (string, error) <span class="cov8" title="1">{
+        tokenHeader := req.Header.Get("Authorization")
+        // The usual convention is for "Bearer" to be title-cased. However, there's no
+        // strict rule around this, and it's best to follow the robustness principle here.
+        if len(tokenHeader) &lt; 7 || !strings.EqualFold(tokenHeader[:7], "bearer ") </span><span class="cov8" title="1">{
+                return "", ErrNoTokenInRequest
+        }</span>
+        <span class="cov8" title="1">return tokenHeader[7:], nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package request
+
+import (
+        "strings"
+)
+
+// Strips 'Bearer ' prefix from bearer token string
+func stripBearerPrefixFromTokenString(tok string) (string, error) <span class="cov8" title="1">{
+        // Should be a bearer token
+        if len(tok) &gt; 6 &amp;&amp; strings.EqualFold(tok[:7], "bearer ") </span><span class="cov8" title="1">{
+                return tok[7:], nil
+        }</span>
+        <span class="cov0" title="0">return tok, nil</span>
+}
+
+// AuthorizationHeaderExtractor extracts a bearer token from Authorization header
+// Uses PostExtractionFilter to strip "Bearer " prefix from header
+var AuthorizationHeaderExtractor = &amp;PostExtractionFilter{
+        HeaderExtractor{"Authorization"},
+        stripBearerPrefixFromTokenString,
+}
+
+// OAuth2Extractor is an Extractor for OAuth2 access tokens.  Looks in 'Authorization'
+// header then 'access_token' argument for a token.
+var OAuth2Extractor = &amp;MultiExtractor{
+        AuthorizationHeaderExtractor,
+        ArgumentExtractor{"access_token"},
+}
+</pre>
+		
+		<pre class="file" id="file14" style="display: none">package request
+
+import (
+        "net/http"
+
+        "github.com/golang-jwt/jwt/v5"
+)
+
+// ParseFromRequest extracts and parses a JWT token from an HTTP request.
+// This behaves the same as Parse, but accepts a request and an extractor
+// instead of a token string.  The Extractor interface allows you to define
+// the logic for extracting a token.  Several useful implementations are provided.
+//
+// You can provide options to modify parsing behavior
+func ParseFromRequest(req *http.Request, extractor Extractor, keyFunc jwt.Keyfunc, options ...ParseFromRequestOption) (token *jwt.Token, err error) <span class="cov8" title="1">{
+        // Create basic parser struct
+        p := &amp;fromRequestParser{req, extractor, nil, nil}
+
+        // Handle options
+        for _, option := range options </span><span class="cov8" title="1">{
+                option(p)
+        }</span>
+
+        // Set defaults
+        <span class="cov8" title="1">if p.claims == nil </span><span class="cov0" title="0">{
+                p.claims = jwt.MapClaims{}
+        }</span>
+        <span class="cov8" title="1">if p.parser == nil </span><span class="cov8" title="1">{
+                p.parser = &amp;jwt.Parser{}
+        }</span>
+
+        // perform extract
+        <span class="cov8" title="1">tokenString, err := p.extractor.ExtractToken(req)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        // perform parse
+        <span class="cov8" title="1">return p.parser.ParseWithClaims(tokenString, p.claims, keyFunc)</span>
+}
+
+// ParseFromRequestWithClaims is an alias for ParseFromRequest but with custom Claims type.
+//
+// Deprecated: use ParseFromRequest and the WithClaims option
+func ParseFromRequestWithClaims(req *http.Request, extractor Extractor, claims jwt.Claims, keyFunc jwt.Keyfunc) (token *jwt.Token, err error) <span class="cov8" title="1">{
+        return ParseFromRequest(req, extractor, keyFunc, WithClaims(claims))
+}</span>
+
+type fromRequestParser struct {
+        req       *http.Request
+        extractor Extractor
+        claims    jwt.Claims
+        parser    *jwt.Parser
+}
+
+type ParseFromRequestOption func(*fromRequestParser)
+
+// WithClaims parses with custom claims
+func WithClaims(claims jwt.Claims) ParseFromRequestOption <span class="cov8" title="1">{
+        return func(p *fromRequestParser) </span><span class="cov8" title="1">{
+                p.claims = claims
+        }</span>
+}
+
+// WithParser parses using a custom parser
+func WithParser(parser *jwt.Parser) ParseFromRequestOption <span class="cov0" title="0">{
+        return func(p *fromRequestParser) </span><span class="cov0" title="0">{
+                p.parser = parser
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file15" style="display: none">package jwt
+
+import (
+        "crypto"
+        "crypto/rand"
+        "crypto/rsa"
+)
+
+// SigningMethodRSA implements the RSA family of signing methods.
+// Expects *rsa.PrivateKey for signing and *rsa.PublicKey for validation
+type SigningMethodRSA struct {
+        Name string
+        Hash crypto.Hash
+}
+
+// Specific instances for RS256 and company
+var (
+        SigningMethodRS256 *SigningMethodRSA
+        SigningMethodRS384 *SigningMethodRSA
+        SigningMethodRS512 *SigningMethodRSA
+)
+
+func init() <span class="cov8" title="1">{
+        // RS256
+        SigningMethodRS256 = &amp;SigningMethodRSA{"RS256", crypto.SHA256}
+        RegisterSigningMethod(SigningMethodRS256.Alg(), func() SigningMethod </span><span class="cov8" title="1">{
+                return SigningMethodRS256
+        }</span>)
+
+        // RS384
+        <span class="cov8" title="1">SigningMethodRS384 = &amp;SigningMethodRSA{"RS384", crypto.SHA384}
+        RegisterSigningMethod(SigningMethodRS384.Alg(), func() SigningMethod </span><span class="cov8" title="1">{
+                return SigningMethodRS384
+        }</span>)
+
+        // RS512
+        <span class="cov8" title="1">SigningMethodRS512 = &amp;SigningMethodRSA{"RS512", crypto.SHA512}
+        RegisterSigningMethod(SigningMethodRS512.Alg(), func() SigningMethod </span><span class="cov8" title="1">{
+                return SigningMethodRS512
+        }</span>)
+}
+
+func (m *SigningMethodRSA) Alg() string <span class="cov8" title="1">{
+        return m.Name
+}</span>
+
+// Verify implements token verification for the SigningMethod
+// For this signing method, must be an *rsa.PublicKey structure.
+func (m *SigningMethodRSA) Verify(signingString string, sig []byte, key interface{}) error <span class="cov8" title="1">{
+        var rsaKey *rsa.PublicKey
+        var ok bool
+
+        if rsaKey, ok = key.(*rsa.PublicKey); !ok </span><span class="cov8" title="1">{
+                return newError("RSA verify expects *rsa.PublicKey", ErrInvalidKeyType)
+        }</span>
+
+        // Create hasher
+        <span class="cov8" title="1">if !m.Hash.Available() </span><span class="cov0" title="0">{
+                return ErrHashUnavailable
+        }</span>
+        <span class="cov8" title="1">hasher := m.Hash.New()
+        hasher.Write([]byte(signingString))
+
+        // Verify the signature
+        return rsa.VerifyPKCS1v15(rsaKey, m.Hash, hasher.Sum(nil), sig)</span>
+}
+
+// Sign implements token signing for the SigningMethod
+// For this signing method, must be an *rsa.PrivateKey structure.
+func (m *SigningMethodRSA) Sign(signingString string, key interface{}) ([]byte, error) <span class="cov8" title="1">{
+        var rsaKey *rsa.PrivateKey
+        var ok bool
+
+        // Validate type of key
+        if rsaKey, ok = key.(*rsa.PrivateKey); !ok </span><span class="cov0" title="0">{
+                return nil, newError("RSA sign expects *rsa.PrivateKey", ErrInvalidKeyType)
+        }</span>
+
+        // Create the hasher
+        <span class="cov8" title="1">if !m.Hash.Available() </span><span class="cov0" title="0">{
+                return nil, ErrHashUnavailable
+        }</span>
+
+        <span class="cov8" title="1">hasher := m.Hash.New()
+        hasher.Write([]byte(signingString))
+
+        // Sign the string and return the encoded bytes
+        if sigBytes, err := rsa.SignPKCS1v15(rand.Reader, rsaKey, m.Hash, hasher.Sum(nil)); err == nil </span><span class="cov8" title="1">{
+                return sigBytes, nil
+        }</span> else<span class="cov0" title="0"> {
+                return nil, err
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file16" style="display: none">//go:build go1.4
+// +build go1.4
+
+package jwt
+
+import (
+        "crypto"
+        "crypto/rand"
+        "crypto/rsa"
+)
+
+// SigningMethodRSAPSS implements the RSAPSS family of signing methods signing methods
+type SigningMethodRSAPSS struct {
+        *SigningMethodRSA
+        Options *rsa.PSSOptions
+        // VerifyOptions is optional. If set overrides Options for rsa.VerifyPPS.
+        // Used to accept tokens signed with rsa.PSSSaltLengthAuto, what doesn't follow
+        // https://tools.ietf.org/html/rfc7518#section-3.5 but was used previously.
+        // See https://github.com/dgrijalva/jwt-go/issues/285#issuecomment-437451244 for details.
+        VerifyOptions *rsa.PSSOptions
+}
+
+// Specific instances for RS/PS and company.
+var (
+        SigningMethodPS256 *SigningMethodRSAPSS
+        SigningMethodPS384 *SigningMethodRSAPSS
+        SigningMethodPS512 *SigningMethodRSAPSS
+)
+
+func init() <span class="cov8" title="1">{
+        // PS256
+        SigningMethodPS256 = &amp;SigningMethodRSAPSS{
+                SigningMethodRSA: &amp;SigningMethodRSA{
+                        Name: "PS256",
+                        Hash: crypto.SHA256,
+                },
+                Options: &amp;rsa.PSSOptions{
+                        SaltLength: rsa.PSSSaltLengthEqualsHash,
+                },
+                VerifyOptions: &amp;rsa.PSSOptions{
+                        SaltLength: rsa.PSSSaltLengthAuto,
+                },
+        }
+        RegisterSigningMethod(SigningMethodPS256.Alg(), func() SigningMethod </span><span class="cov8" title="1">{
+                return SigningMethodPS256
+        }</span>)
+
+        // PS384
+        <span class="cov8" title="1">SigningMethodPS384 = &amp;SigningMethodRSAPSS{
+                SigningMethodRSA: &amp;SigningMethodRSA{
+                        Name: "PS384",
+                        Hash: crypto.SHA384,
+                },
+                Options: &amp;rsa.PSSOptions{
+                        SaltLength: rsa.PSSSaltLengthEqualsHash,
+                },
+                VerifyOptions: &amp;rsa.PSSOptions{
+                        SaltLength: rsa.PSSSaltLengthAuto,
+                },
+        }
+        RegisterSigningMethod(SigningMethodPS384.Alg(), func() SigningMethod </span><span class="cov8" title="1">{
+                return SigningMethodPS384
+        }</span>)
+
+        // PS512
+        <span class="cov8" title="1">SigningMethodPS512 = &amp;SigningMethodRSAPSS{
+                SigningMethodRSA: &amp;SigningMethodRSA{
+                        Name: "PS512",
+                        Hash: crypto.SHA512,
+                },
+                Options: &amp;rsa.PSSOptions{
+                        SaltLength: rsa.PSSSaltLengthEqualsHash,
+                },
+                VerifyOptions: &amp;rsa.PSSOptions{
+                        SaltLength: rsa.PSSSaltLengthAuto,
+                },
+        }
+        RegisterSigningMethod(SigningMethodPS512.Alg(), func() SigningMethod </span><span class="cov8" title="1">{
+                return SigningMethodPS512
+        }</span>)
+}
+
+// Verify implements token verification for the SigningMethod.
+// For this verify method, key must be an rsa.PublicKey struct
+func (m *SigningMethodRSAPSS) Verify(signingString string, sig []byte, key interface{}) error <span class="cov8" title="1">{
+        var rsaKey *rsa.PublicKey
+        switch k := key.(type) </span>{
+        case *rsa.PublicKey:<span class="cov8" title="1">
+                rsaKey = k</span>
+        default:<span class="cov0" title="0">
+                return newError("RSA-PSS verify expects *rsa.PublicKey", ErrInvalidKeyType)</span>
+        }
+
+        // Create hasher
+        <span class="cov8" title="1">if !m.Hash.Available() </span><span class="cov0" title="0">{
+                return ErrHashUnavailable
+        }</span>
+        <span class="cov8" title="1">hasher := m.Hash.New()
+        hasher.Write([]byte(signingString))
+
+        opts := m.Options
+        if m.VerifyOptions != nil </span><span class="cov8" title="1">{
+                opts = m.VerifyOptions
+        }</span>
+
+        <span class="cov8" title="1">return rsa.VerifyPSS(rsaKey, m.Hash, hasher.Sum(nil), sig, opts)</span>
+}
+
+// Sign implements token signing for the SigningMethod.
+// For this signing method, key must be an rsa.PrivateKey struct
+func (m *SigningMethodRSAPSS) Sign(signingString string, key interface{}) ([]byte, error) <span class="cov8" title="1">{
+        var rsaKey *rsa.PrivateKey
+
+        switch k := key.(type) </span>{
+        case *rsa.PrivateKey:<span class="cov8" title="1">
+                rsaKey = k</span>
+        default:<span class="cov0" title="0">
+                return nil, newError("RSA-PSS sign expects *rsa.PrivateKey", ErrInvalidKeyType)</span>
+        }
+
+        // Create the hasher
+        <span class="cov8" title="1">if !m.Hash.Available() </span><span class="cov0" title="0">{
+                return nil, ErrHashUnavailable
+        }</span>
+
+        <span class="cov8" title="1">hasher := m.Hash.New()
+        hasher.Write([]byte(signingString))
+
+        // Sign the string and return the encoded bytes
+        if sigBytes, err := rsa.SignPSS(rand.Reader, rsaKey, m.Hash, hasher.Sum(nil), m.Options); err == nil </span><span class="cov8" title="1">{
+                return sigBytes, nil
+        }</span> else<span class="cov0" title="0"> {
+                return nil, err
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file17" style="display: none">package jwt
+
+import (
+        "crypto/rsa"
+        "crypto/x509"
+        "encoding/pem"
+        "errors"
+)
+
+var (
+        ErrKeyMustBePEMEncoded = errors.New("invalid key: Key must be a PEM encoded PKCS1 or PKCS8 key")
+        ErrNotRSAPrivateKey    = errors.New("key is not a valid RSA private key")
+        ErrNotRSAPublicKey     = errors.New("key is not a valid RSA public key")
+)
+
+// ParseRSAPrivateKeyFromPEM parses a PEM encoded PKCS1 or PKCS8 private key
+func ParseRSAPrivateKeyFromPEM(key []byte) (*rsa.PrivateKey, error) <span class="cov8" title="1">{
+        var err error
+
+        // Parse PEM block
+        var block *pem.Block
+        if block, _ = pem.Decode(key); block == nil </span><span class="cov8" title="1">{
+                return nil, ErrKeyMustBePEMEncoded
+        }</span>
+
+        <span class="cov8" title="1">var parsedKey interface{}
+        if parsedKey, err = x509.ParsePKCS1PrivateKey(block.Bytes); err != nil </span><span class="cov8" title="1">{
+                if parsedKey, err = x509.ParsePKCS8PrivateKey(block.Bytes); err != nil </span><span class="cov8" title="1">{
+                        return nil, err
+                }</span>
+        }
+
+        <span class="cov8" title="1">var pkey *rsa.PrivateKey
+        var ok bool
+        if pkey, ok = parsedKey.(*rsa.PrivateKey); !ok </span><span class="cov0" title="0">{
+                return nil, ErrNotRSAPrivateKey
+        }</span>
+
+        <span class="cov8" title="1">return pkey, nil</span>
+}
+
+// ParseRSAPrivateKeyFromPEMWithPassword parses a PEM encoded PKCS1 or PKCS8 private key protected with password
+//
+// Deprecated: This function is deprecated and should not be used anymore. It uses the deprecated x509.DecryptPEMBlock
+// function, which was deprecated since RFC 1423 is regarded insecure by design. Unfortunately, there is no alternative
+// in the Go standard library for now. See https://github.com/golang/go/issues/8860.
+func ParseRSAPrivateKeyFromPEMWithPassword(key []byte, password string) (*rsa.PrivateKey, error) <span class="cov8" title="1">{
+        var err error
+
+        // Parse PEM block
+        var block *pem.Block
+        if block, _ = pem.Decode(key); block == nil </span><span class="cov0" title="0">{
+                return nil, ErrKeyMustBePEMEncoded
+        }</span>
+
+        <span class="cov8" title="1">var parsedKey interface{}
+
+        var blockDecrypted []byte
+        if blockDecrypted, err = x509.DecryptPEMBlock(block, []byte(password)); err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">if parsedKey, err = x509.ParsePKCS1PrivateKey(blockDecrypted); err != nil </span><span class="cov0" title="0">{
+                if parsedKey, err = x509.ParsePKCS8PrivateKey(blockDecrypted); err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+        }
+
+        <span class="cov8" title="1">var pkey *rsa.PrivateKey
+        var ok bool
+        if pkey, ok = parsedKey.(*rsa.PrivateKey); !ok </span><span class="cov0" title="0">{
+                return nil, ErrNotRSAPrivateKey
+        }</span>
+
+        <span class="cov8" title="1">return pkey, nil</span>
+}
+
+// ParseRSAPublicKeyFromPEM parses a certificate or a PEM encoded PKCS1 or PKIX public key
+func ParseRSAPublicKeyFromPEM(key []byte) (*rsa.PublicKey, error) <span class="cov8" title="1">{
+        var err error
+
+        // Parse PEM block
+        var block *pem.Block
+        if block, _ = pem.Decode(key); block == nil </span><span class="cov8" title="1">{
+                return nil, ErrKeyMustBePEMEncoded
+        }</span>
+
+        // Parse the key
+        <span class="cov8" title="1">var parsedKey interface{}
+        if parsedKey, err = x509.ParsePKIXPublicKey(block.Bytes); err != nil </span><span class="cov8" title="1">{
+                if cert, err := x509.ParseCertificate(block.Bytes); err == nil </span><span class="cov0" title="0">{
+                        parsedKey = cert.PublicKey
+                }</span> else<span class="cov8" title="1"> {
+                        if parsedKey, err = x509.ParsePKCS1PublicKey(block.Bytes); err != nil </span><span class="cov8" title="1">{
+                                return nil, err
+                        }</span>
+                }
+        }
+
+        <span class="cov8" title="1">var pkey *rsa.PublicKey
+        var ok bool
+        if pkey, ok = parsedKey.(*rsa.PublicKey); !ok </span><span class="cov0" title="0">{
+                return nil, ErrNotRSAPublicKey
+        }</span>
+
+        <span class="cov8" title="1">return pkey, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file18" style="display: none">package jwt
+
+import (
+        "sync"
+)
+
+var signingMethods = map[string]func() SigningMethod{}
+var signingMethodLock = new(sync.RWMutex)
+
+// SigningMethod can be used add new methods for signing or verifying tokens. It
+// takes a decoded signature as an input in the Verify function and produces a
+// signature in Sign. The signature is then usually base64 encoded as part of a
+// JWT.
+type SigningMethod interface {
+        Verify(signingString string, sig []byte, key interface{}) error // Returns nil if signature is valid
+        Sign(signingString string, key interface{}) ([]byte, error)     // Returns signature or error
+        Alg() string                                                    // returns the alg identifier for this method (example: 'HS256')
+}
+
+// RegisterSigningMethod registers the "alg" name and a factory function for signing method.
+// This is typically done during init() in the method's implementation
+func RegisterSigningMethod(alg string, f func() SigningMethod) <span class="cov8" title="1">{
+        signingMethodLock.Lock()
+        defer signingMethodLock.Unlock()
+
+        signingMethods[alg] = f
+}</span>
+
+// GetSigningMethod retrieves a signing method from an "alg" string
+func GetSigningMethod(alg string) (method SigningMethod) <span class="cov8" title="1">{
+        signingMethodLock.RLock()
+        defer signingMethodLock.RUnlock()
+
+        if methodF, ok := signingMethods[alg]; ok </span><span class="cov8" title="1">{
+                method = methodF()
+        }</span>
+        <span class="cov8" title="1">return</span>
+}
+
+// GetAlgorithms returns a list of registered "alg" names
+func GetAlgorithms() (algs []string) <span class="cov0" title="0">{
+        signingMethodLock.RLock()
+        defer signingMethodLock.RUnlock()
+
+        for alg := range signingMethods </span><span class="cov0" title="0">{
+                algs = append(algs, alg)
+        }</span>
+        <span class="cov0" title="0">return</span>
+}
+</pre>
+		
+		<pre class="file" id="file19" style="display: none">package test
+
+import (
+        "crypto"
+        "crypto/rsa"
+        "os"
+
+        "github.com/golang-jwt/jwt/v5"
+)
+
+func LoadRSAPrivateKeyFromDisk(location string) *rsa.PrivateKey <span class="cov8" title="1">{
+        keyData, e := os.ReadFile(location)
+        if e != nil </span><span class="cov0" title="0">{
+                panic(e.Error())</span>
+        }
+        <span class="cov8" title="1">key, e := jwt.ParseRSAPrivateKeyFromPEM(keyData)
+        if e != nil </span><span class="cov0" title="0">{
+                panic(e.Error())</span>
+        }
+        <span class="cov8" title="1">return key</span>
+}
+
+func LoadRSAPublicKeyFromDisk(location string) *rsa.PublicKey <span class="cov8" title="1">{
+        keyData, e := os.ReadFile(location)
+        if e != nil </span><span class="cov0" title="0">{
+                panic(e.Error())</span>
+        }
+        <span class="cov8" title="1">key, e := jwt.ParseRSAPublicKeyFromPEM(keyData)
+        if e != nil </span><span class="cov0" title="0">{
+                panic(e.Error())</span>
+        }
+        <span class="cov8" title="1">return key</span>
+}
+
+// MakeSampleToken creates and returns a encoded JWT token that has been signed with the specified cryptographic key.
+func MakeSampleToken(c jwt.Claims, method jwt.SigningMethod, key interface{}) string <span class="cov8" title="1">{
+        token := jwt.NewWithClaims(method, c)
+        s, e := token.SignedString(key)
+
+        if e != nil </span><span class="cov0" title="0">{
+                panic(e.Error())</span>
+        }
+
+        <span class="cov8" title="1">return s</span>
+}
+
+func LoadECPrivateKeyFromDisk(location string) crypto.PrivateKey <span class="cov0" title="0">{
+        keyData, e := os.ReadFile(location)
+        if e != nil </span><span class="cov0" title="0">{
+                panic(e.Error())</span>
+        }
+        <span class="cov0" title="0">key, e := jwt.ParseECPrivateKeyFromPEM(keyData)
+        if e != nil </span><span class="cov0" title="0">{
+                panic(e.Error())</span>
+        }
+        <span class="cov0" title="0">return key</span>
+}
+
+func LoadECPublicKeyFromDisk(location string) crypto.PublicKey <span class="cov0" title="0">{
+        keyData, e := os.ReadFile(location)
+        if e != nil </span><span class="cov0" title="0">{
+                panic(e.Error())</span>
+        }
+        <span class="cov0" title="0">key, e := jwt.ParseECPublicKeyFromPEM(keyData)
+        if e != nil </span><span class="cov0" title="0">{
+                panic(e.Error())</span>
+        }
+        <span class="cov0" title="0">return key</span>
+}
+</pre>
+		
+		<pre class="file" id="file20" style="display: none">package jwt
+
+import (
+        "crypto"
+        "encoding/base64"
+        "encoding/json"
+)
+
+// Keyfunc will be used by the Parse methods as a callback function to supply
+// the key for verification.  The function receives the parsed, but unverified
+// Token.  This allows you to use properties in the Header of the token (such as
+// `kid`) to identify which key to use.
+//
+// The returned interface{} may be a single key or a VerificationKeySet containing
+// multiple keys.
+type Keyfunc func(*Token) (interface{}, error)
+
+// VerificationKey represents a public or secret key for verifying a token's signature.
+type VerificationKey interface {
+        crypto.PublicKey | []uint8
+}
+
+// VerificationKeySet is a set of public or secret keys. It is used by the parser to verify a token.
+type VerificationKeySet struct {
+        Keys []VerificationKey
+}
+
+// Token represents a JWT Token.  Different fields will be used depending on
+// whether you're creating or parsing/verifying a token.
+type Token struct {
+        Raw       string                 // Raw contains the raw token.  Populated when you [Parse] a token
+        Method    SigningMethod          // Method is the signing method used or to be used
+        Header    map[string]interface{} // Header is the first segment of the token in decoded form
+        Claims    Claims                 // Claims is the second segment of the token in decoded form
+        Signature []byte                 // Signature is the third segment of the token in decoded form.  Populated when you Parse a token
+        Valid     bool                   // Valid specifies if the token is valid.  Populated when you Parse/Verify a token
+}
+
+// New creates a new [Token] with the specified signing method and an empty map
+// of claims. Additional options can be specified, but are currently unused.
+func New(method SigningMethod, opts ...TokenOption) *Token <span class="cov8" title="1">{
+        return NewWithClaims(method, MapClaims{}, opts...)
+}</span>
+
+// NewWithClaims creates a new [Token] with the specified signing method and
+// claims. Additional options can be specified, but are currently unused.
+func NewWithClaims(method SigningMethod, claims Claims, opts ...TokenOption) *Token <span class="cov8" title="1">{
+        return &amp;Token{
+                Header: map[string]interface{}{
+                        "typ": "JWT",
+                        "alg": method.Alg(),
+                },
+                Claims: claims,
+                Method: method,
+        }
+}</span>
+
+// SignedString creates and returns a complete, signed JWT. The token is signed
+// using the SigningMethod specified in the token. Please refer to
+// https://golang-jwt.github.io/jwt/usage/signing_methods/#signing-methods-and-key-types
+// for an overview of the different signing methods and their respective key
+// types.
+func (t *Token) SignedString(key interface{}) (string, error) <span class="cov8" title="1">{
+        sstr, err := t.SigningString()
+        if err != nil </span><span class="cov0" title="0">{
+                return "", err
+        }</span>
+
+        <span class="cov8" title="1">sig, err := t.Method.Sign(sstr, key)
+        if err != nil </span><span class="cov0" title="0">{
+                return "", err
+        }</span>
+
+        <span class="cov8" title="1">return sstr + "." + t.EncodeSegment(sig), nil</span>
+}
+
+// SigningString generates the signing string.  This is the most expensive part
+// of the whole deal. Unless you need this for something special, just go
+// straight for the SignedString.
+func (t *Token) SigningString() (string, error) <span class="cov8" title="1">{
+        h, err := json.Marshal(t.Header)
+        if err != nil </span><span class="cov0" title="0">{
+                return "", err
+        }</span>
+
+        <span class="cov8" title="1">c, err := json.Marshal(t.Claims)
+        if err != nil </span><span class="cov0" title="0">{
+                return "", err
+        }</span>
+
+        <span class="cov8" title="1">return t.EncodeSegment(h) + "." + t.EncodeSegment(c), nil</span>
+}
+
+// EncodeSegment encodes a JWT specific base64url encoding with padding
+// stripped. In the future, this function might take into account a
+// [TokenOption]. Therefore, this function exists as a method of [Token], rather
+// than a global function.
+func (*Token) EncodeSegment(seg []byte) string <span class="cov8" title="1">{
+        return base64.RawURLEncoding.EncodeToString(seg)
+}</span>
+</pre>
+		
+		<pre class="file" id="file21" style="display: none">package jwt
+
+import (
+        "encoding/json"
+        "fmt"
+        "math"
+        "strconv"
+        "time"
+)
+
+// TimePrecision sets the precision of times and dates within this library. This
+// has an influence on the precision of times when comparing expiry or other
+// related time fields. Furthermore, it is also the precision of times when
+// serializing.
+//
+// For backwards compatibility the default precision is set to seconds, so that
+// no fractional timestamps are generated.
+var TimePrecision = time.Second
+
+// MarshalSingleStringAsArray modifies the behavior of the ClaimStrings type,
+// especially its MarshalJSON function.
+//
+// If it is set to true (the default), it will always serialize the type as an
+// array of strings, even if it just contains one element, defaulting to the
+// behavior of the underlying []string. If it is set to false, it will serialize
+// to a single string, if it contains one element. Otherwise, it will serialize
+// to an array of strings.
+var MarshalSingleStringAsArray = true
+
+// NumericDate represents a JSON numeric date value, as referenced at
+// https://datatracker.ietf.org/doc/html/rfc7519#section-2.
+type NumericDate struct {
+        time.Time
+}
+
+// NewNumericDate constructs a new *NumericDate from a standard library time.Time struct.
+// It will truncate the timestamp according to the precision specified in TimePrecision.
+func NewNumericDate(t time.Time) *NumericDate <span class="cov8" title="1">{
+        return &amp;NumericDate{t.Truncate(TimePrecision)}
+}</span>
+
+// newNumericDateFromSeconds creates a new *NumericDate out of a float64 representing a
+// UNIX epoch with the float fraction representing non-integer seconds.
+func newNumericDateFromSeconds(f float64) *NumericDate <span class="cov8" title="1">{
+        round, frac := math.Modf(f)
+        return NewNumericDate(time.Unix(int64(round), int64(frac*1e9)))
+}</span>
+
+// MarshalJSON is an implementation of the json.RawMessage interface and serializes the UNIX epoch
+// represented in NumericDate to a byte array, using the precision specified in TimePrecision.
+func (date NumericDate) MarshalJSON() (b []byte, err error) <span class="cov8" title="1">{
+        var prec int
+        if TimePrecision &lt; time.Second </span><span class="cov8" title="1">{
+                prec = int(math.Log10(float64(time.Second) / float64(TimePrecision)))
+        }</span>
+        <span class="cov8" title="1">truncatedDate := date.Truncate(TimePrecision)
+
+        // For very large timestamps, UnixNano would overflow an int64, but this
+        // function requires nanosecond level precision, so we have to use the
+        // following technique to get round the issue:
+        //
+        // 1. Take the normal unix timestamp to form the whole number part of the
+        //    output,
+        // 2. Take the result of the Nanosecond function, which returns the offset
+        //    within the second of the particular unix time instance, to form the
+        //    decimal part of the output
+        // 3. Concatenate them to produce the final result
+        seconds := strconv.FormatInt(truncatedDate.Unix(), 10)
+        nanosecondsOffset := strconv.FormatFloat(float64(truncatedDate.Nanosecond())/float64(time.Second), 'f', prec, 64)
+
+        output := append([]byte(seconds), []byte(nanosecondsOffset)[1:]...)
+
+        return output, nil</span>
+}
+
+// UnmarshalJSON is an implementation of the json.RawMessage interface and
+// deserializes a [NumericDate] from a JSON representation, i.e. a
+// [json.Number]. This number represents an UNIX epoch with either integer or
+// non-integer seconds.
+func (date *NumericDate) UnmarshalJSON(b []byte) (err error) <span class="cov8" title="1">{
+        var (
+                number json.Number
+                f      float64
+        )
+
+        if err = json.Unmarshal(b, &amp;number); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("could not parse NumericData: %w", err)
+        }</span>
+
+        <span class="cov8" title="1">if f, err = number.Float64(); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("could not convert json number value to float: %w", err)
+        }</span>
+
+        <span class="cov8" title="1">n := newNumericDateFromSeconds(f)
+        *date = *n
+
+        return nil</span>
+}
+
+// ClaimStrings is basically just a slice of strings, but it can be either
+// serialized from a string array or just a string. This type is necessary,
+// since the "aud" claim can either be a single string or an array.
+type ClaimStrings []string
+
+func (s *ClaimStrings) UnmarshalJSON(data []byte) (err error) <span class="cov8" title="1">{
+        var value interface{}
+
+        if err = json.Unmarshal(data, &amp;value); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">var aud []string
+
+        switch v := value.(type) </span>{
+        case string:<span class="cov8" title="1">
+                aud = append(aud, v)</span>
+        case []string:<span class="cov0" title="0">
+                aud = ClaimStrings(v)</span>
+        case []interface{}:<span class="cov8" title="1">
+                for _, vv := range v </span><span class="cov8" title="1">{
+                        vs, ok := vv.(string)
+                        if !ok </span><span class="cov8" title="1">{
+                                return ErrInvalidType
+                        }</span>
+                        <span class="cov8" title="1">aud = append(aud, vs)</span>
+                }
+        case nil:<span class="cov0" title="0">
+                return nil</span>
+        default:<span class="cov8" title="1">
+                return ErrInvalidType</span>
+        }
+
+        <span class="cov8" title="1">*s = aud
+
+        return</span>
+}
+
+func (s ClaimStrings) MarshalJSON() (b []byte, err error) <span class="cov8" title="1">{
+        // This handles a special case in the JWT RFC. If the string array, e.g.
+        // used by the "aud" field, only contains one element, it MAY be serialized
+        // as a single string. This may or may not be desired based on the ecosystem
+        // of other JWT library used, so we make it configurable by the variable
+        // MarshalSingleStringAsArray.
+        if len(s) == 1 &amp;&amp; !MarshalSingleStringAsArray </span><span class="cov8" title="1">{
+                return json.Marshal(s[0])
+        }</span>
+
+        <span class="cov8" title="1">return json.Marshal([]string(s))</span>
+}
+</pre>
+		
+		<pre class="file" id="file22" style="display: none">package jwt
+
+import (
+        "crypto/subtle"
+        "fmt"
+        "time"
+)
+
+// ClaimsValidator is an interface that can be implemented by custom claims who
+// wish to execute any additional claims validation based on
+// application-specific logic. The Validate function is then executed in
+// addition to the regular claims validation and any error returned is appended
+// to the final validation result.
+//
+//        type MyCustomClaims struct {
+//            Foo string `json:"foo"`
+//            jwt.RegisteredClaims
+//        }
+//
+//        func (m MyCustomClaims) Validate() error {
+//            if m.Foo != "bar" {
+//                return errors.New("must be foobar")
+//            }
+//            return nil
+//        }
+type ClaimsValidator interface {
+        Claims
+        Validate() error
+}
+
+// Validator is the core of the new Validation API. It is automatically used by
+// a [Parser] during parsing and can be modified with various parser options.
+//
+// The [NewValidator] function should be used to create an instance of this
+// struct.
+type Validator struct {
+        // leeway is an optional leeway that can be provided to account for clock skew.
+        leeway time.Duration
+
+        // timeFunc is used to supply the current time that is needed for
+        // validation. If unspecified, this defaults to time.Now.
+        timeFunc func() time.Time
+
+        // requireExp specifies whether the exp claim is required
+        requireExp bool
+
+        // verifyIat specifies whether the iat (Issued At) claim will be verified.
+        // According to https://www.rfc-editor.org/rfc/rfc7519#section-4.1.6 this
+        // only specifies the age of the token, but no validation check is
+        // necessary. However, if wanted, it can be checked if the iat is
+        // unrealistic, i.e., in the future.
+        verifyIat bool
+
+        // expectedAud contains the audience this token expects. Supplying an empty
+        // string will disable aud checking.
+        expectedAud string
+
+        // expectedIss contains the issuer this token expects. Supplying an empty
+        // string will disable iss checking.
+        expectedIss string
+
+        // expectedSub contains the subject this token expects. Supplying an empty
+        // string will disable sub checking.
+        expectedSub string
+}
+
+// NewValidator can be used to create a stand-alone validator with the supplied
+// options. This validator can then be used to validate already parsed claims.
+//
+// Note: Under normal circumstances, explicitly creating a validator is not
+// needed and can potentially be dangerous; instead functions of the [Parser]
+// class should be used.
+//
+// The [Validator] is only checking the *validity* of the claims, such as its
+// expiration time, but it does NOT perform *signature verification* of the
+// token.
+func NewValidator(opts ...ParserOption) *Validator <span class="cov8" title="1">{
+        p := NewParser(opts...)
+        return p.validator
+}</span>
+
+// Validate validates the given claims. It will also perform any custom
+// validation if claims implements the [ClaimsValidator] interface.
+//
+// Note: It will NOT perform any *signature verification* on the token that
+// contains the claims and expects that the [Claim] was already successfully
+// verified.
+func (v *Validator) Validate(claims Claims) error <span class="cov8" title="1">{
+        var (
+                now  time.Time
+                errs []error = make([]error, 0, 6)
+                err  error
+        )
+
+        // Check, if we have a time func
+        if v.timeFunc != nil </span><span class="cov8" title="1">{
+                now = v.timeFunc()
+        }</span> else<span class="cov8" title="1"> {
+                now = time.Now()
+        }</span>
+
+        // We always need to check the expiration time, but usage of the claim
+        // itself is OPTIONAL by default. requireExp overrides this behavior
+        // and makes the exp claim mandatory.
+        <span class="cov8" title="1">if err = v.verifyExpiresAt(claims, now, v.requireExp); err != nil </span><span class="cov8" title="1">{
+                errs = append(errs, err)
+        }</span>
+
+        // We always need to check not-before, but usage of the claim itself is
+        // OPTIONAL.
+        <span class="cov8" title="1">if err = v.verifyNotBefore(claims, now, false); err != nil </span><span class="cov8" title="1">{
+                errs = append(errs, err)
+        }</span>
+
+        // Check issued-at if the option is enabled
+        <span class="cov8" title="1">if v.verifyIat </span><span class="cov8" title="1">{
+                if err = v.verifyIssuedAt(claims, now, false); err != nil </span><span class="cov8" title="1">{
+                        errs = append(errs, err)
+                }</span>
+        }
+
+        // If we have an expected audience, we also require the audience claim
+        <span class="cov8" title="1">if v.expectedAud != "" </span><span class="cov8" title="1">{
+                if err = v.verifyAudience(claims, v.expectedAud, true); err != nil </span><span class="cov8" title="1">{
+                        errs = append(errs, err)
+                }</span>
+        }
+
+        // If we have an expected issuer, we also require the issuer claim
+        <span class="cov8" title="1">if v.expectedIss != "" </span><span class="cov8" title="1">{
+                if err = v.verifyIssuer(claims, v.expectedIss, true); err != nil </span><span class="cov8" title="1">{
+                        errs = append(errs, err)
+                }</span>
+        }
+
+        // If we have an expected subject, we also require the subject claim
+        <span class="cov8" title="1">if v.expectedSub != "" </span><span class="cov8" title="1">{
+                if err = v.verifySubject(claims, v.expectedSub, true); err != nil </span><span class="cov8" title="1">{
+                        errs = append(errs, err)
+                }</span>
+        }
+
+        // Finally, we want to give the claim itself some possibility to do some
+        // additional custom validation based on a custom Validate function.
+        <span class="cov8" title="1">cvt, ok := claims.(ClaimsValidator)
+        if ok </span><span class="cov8" title="1">{
+                if err := cvt.Validate(); err != nil </span><span class="cov8" title="1">{
+                        errs = append(errs, err)
+                }</span>
+        }
+
+        <span class="cov8" title="1">if len(errs) == 0 </span><span class="cov8" title="1">{
+                return nil
+        }</span>
+
+        <span class="cov8" title="1">return joinErrors(errs...)</span>
+}
+
+// verifyExpiresAt compares the exp claim in claims against cmp. This function
+// will succeed if cmp &lt; exp. Additional leeway is taken into account.
+//
+// If exp is not set, it will succeed if the claim is not required,
+// otherwise ErrTokenRequiredClaimMissing will be returned.
+//
+// Additionally, if any error occurs while retrieving the claim, e.g., when its
+// the wrong type, an ErrTokenUnverifiable error will be returned.
+func (v *Validator) verifyExpiresAt(claims Claims, cmp time.Time, required bool) error <span class="cov8" title="1">{
+        exp, err := claims.GetExpirationTime()
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">if exp == nil </span><span class="cov8" title="1">{
+                return errorIfRequired(required, "exp")
+        }</span>
+
+        <span class="cov8" title="1">return errorIfFalse(cmp.Before((exp.Time).Add(+v.leeway)), ErrTokenExpired)</span>
+}
+
+// verifyIssuedAt compares the iat claim in claims against cmp. This function
+// will succeed if cmp &gt;= iat. Additional leeway is taken into account.
+//
+// If iat is not set, it will succeed if the claim is not required,
+// otherwise ErrTokenRequiredClaimMissing will be returned.
+//
+// Additionally, if any error occurs while retrieving the claim, e.g., when its
+// the wrong type, an ErrTokenUnverifiable error will be returned.
+func (v *Validator) verifyIssuedAt(claims Claims, cmp time.Time, required bool) error <span class="cov8" title="1">{
+        iat, err := claims.GetIssuedAt()
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">if iat == nil </span><span class="cov8" title="1">{
+                return errorIfRequired(required, "iat")
+        }</span>
+
+        <span class="cov8" title="1">return errorIfFalse(!cmp.Before(iat.Add(-v.leeway)), ErrTokenUsedBeforeIssued)</span>
+}
+
+// verifyNotBefore compares the nbf claim in claims against cmp. This function
+// will return true if cmp &gt;= nbf. Additional leeway is taken into account.
+//
+// If nbf is not set, it will succeed if the claim is not required,
+// otherwise ErrTokenRequiredClaimMissing will be returned.
+//
+// Additionally, if any error occurs while retrieving the claim, e.g., when its
+// the wrong type, an ErrTokenUnverifiable error will be returned.
+func (v *Validator) verifyNotBefore(claims Claims, cmp time.Time, required bool) error <span class="cov8" title="1">{
+        nbf, err := claims.GetNotBefore()
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">if nbf == nil </span><span class="cov8" title="1">{
+                return errorIfRequired(required, "nbf")
+        }</span>
+
+        <span class="cov8" title="1">return errorIfFalse(!cmp.Before(nbf.Add(-v.leeway)), ErrTokenNotValidYet)</span>
+}
+
+// verifyAudience compares the aud claim against cmp.
+//
+// If aud is not set or an empty list, it will succeed if the claim is not required,
+// otherwise ErrTokenRequiredClaimMissing will be returned.
+//
+// Additionally, if any error occurs while retrieving the claim, e.g., when its
+// the wrong type, an ErrTokenUnverifiable error will be returned.
+func (v *Validator) verifyAudience(claims Claims, cmp string, required bool) error <span class="cov8" title="1">{
+        aud, err := claims.GetAudience()
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">if len(aud) == 0 </span><span class="cov8" title="1">{
+                return errorIfRequired(required, "aud")
+        }</span>
+
+        // use a var here to keep constant time compare when looping over a number of claims
+        <span class="cov8" title="1">result := false
+
+        var stringClaims string
+        for _, a := range aud </span><span class="cov8" title="1">{
+                if subtle.ConstantTimeCompare([]byte(a), []byte(cmp)) != 0 </span><span class="cov8" title="1">{
+                        result = true
+                }</span>
+                <span class="cov8" title="1">stringClaims = stringClaims + a</span>
+        }
+
+        // case where "" is sent in one or many aud claims
+        <span class="cov8" title="1">if stringClaims == "" </span><span class="cov8" title="1">{
+                return errorIfRequired(required, "aud")
+        }</span>
+
+        <span class="cov8" title="1">return errorIfFalse(result, ErrTokenInvalidAudience)</span>
+}
+
+// verifyIssuer compares the iss claim in claims against cmp.
+//
+// If iss is not set, it will succeed if the claim is not required,
+// otherwise ErrTokenRequiredClaimMissing will be returned.
+//
+// Additionally, if any error occurs while retrieving the claim, e.g., when its
+// the wrong type, an ErrTokenUnverifiable error will be returned.
+func (v *Validator) verifyIssuer(claims Claims, cmp string, required bool) error <span class="cov8" title="1">{
+        iss, err := claims.GetIssuer()
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">if iss == "" </span><span class="cov8" title="1">{
+                return errorIfRequired(required, "iss")
+        }</span>
+
+        <span class="cov8" title="1">return errorIfFalse(iss == cmp, ErrTokenInvalidIssuer)</span>
+}
+
+// verifySubject compares the sub claim against cmp.
+//
+// If sub is not set, it will succeed if the claim is not required,
+// otherwise ErrTokenRequiredClaimMissing will be returned.
+//
+// Additionally, if any error occurs while retrieving the claim, e.g., when its
+// the wrong type, an ErrTokenUnverifiable error will be returned.
+func (v *Validator) verifySubject(claims Claims, cmp string, required bool) error <span class="cov8" title="1">{
+        sub, err := claims.GetSubject()
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">if sub == "" </span><span class="cov8" title="1">{
+                return errorIfRequired(required, "sub")
+        }</span>
+
+        <span class="cov8" title="1">return errorIfFalse(sub == cmp, ErrTokenInvalidSubject)</span>
+}
+
+// errorIfFalse returns the error specified in err, if the value is true.
+// Otherwise, nil is returned.
+func errorIfFalse(value bool, err error) error <span class="cov8" title="1">{
+        if value </span><span class="cov8" title="1">{
+                return nil
+        }</span> else<span class="cov8" title="1"> {
+                return err
+        }</span>
+}
+
+// errorIfRequired returns an ErrTokenRequiredClaimMissing error if required is
+// true. Otherwise, nil is returned.
+func errorIfRequired(required bool, claim string) error <span class="cov8" title="1">{
+        if required </span><span class="cov8" title="1">{
+                return newError(fmt.Sprintf("%s claim is required", claim), ErrTokenRequiredClaimMissing)
+        }</span> else<span class="cov8" title="1"> {
+                return nil
+        }</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
