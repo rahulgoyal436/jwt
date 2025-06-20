@@ -1,0 +1,215 @@
+openapi: 3.0.0
+info:
+  title: YouTube API
+  description: API for accessing YouTube homepage, trending videos, and shorts
+  version: 1.0.0
+servers:
+  - url: https://www.youtube.com
+    description: YouTube main server
+paths:
+  /:
+    get:
+      summary: Get YouTube homepage
+      description: Retrieves the YouTube homepage with recommended videos
+      operationId: getHomepage
+      parameters:
+        - name: Authorization
+          in: header
+          description: Optional authentication token
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response with homepage content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HomepageResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /feed/trending:
+    get:
+      summary: Get trending videos
+      description: Retrieves the current trending videos on YouTube
+      operationId: getTrendingVideos
+      parameters:
+        - name: Authorization
+          in: header
+          description: Optional authentication token
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response with trending videos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrendingResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /shorts:
+    get:
+      summary: Get shorts videos
+      description: Retrieves the YouTube shorts videos
+      operationId: getShortsVideos
+      parameters:
+        - name: Authorization
+          in: header
+          description: Optional authentication token
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response with shorts videos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShortsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  schemas:
+    Video:
+      type: object
+      required:
+        - thumbnail
+        - title
+        - channelName
+        - viewCount
+        - uploadTime
+      properties:
+        thumbnail:
+          type: string
+          description: URL to the video thumbnail image
+          example: "https://i.ytimg.com/vi/abc123/hqdefault.jpg"
+        title:
+          type: string
+          description: Title of the video
+          example: "How to Create an API Specification"
+        channelName:
+          type: string
+          description: Name of the channel that uploaded the video
+          example: "Tech Tutorials"
+        viewCount:
+          type: integer
+          description: Number of views for the video
+          example: 1250000
+        uploadTime:
+          type: string
+          description: When the video was uploaded
+          example: "2 weeks ago"
+    HomepageResponse:
+      type: object
+      required:
+        - header
+        - sidebar
+        - recommendedVideos
+      properties:
+        header:
+          type: object
+          description: Header elements of the YouTube homepage
+        sidebar:
+          type: object
+          description: Sidebar navigation elements
+        recommendedVideos:
+          type: array
+          description: List of recommended videos
+          items:
+            $ref: '#/components/schemas/Video'
+    TrendingResponse:
+      type: object
+      required:
+        - trendingVideos
+      properties:
+        trendingVideos:
+          type: array
+          description: List of trending videos
+          items:
+            $ref: '#/components/schemas/Video'
+    ShortsResponse:
+      type: object
+      required:
+        - shortsVideos
+      properties:
+        shortsVideos:
+          type: array
+          description: List of shorts videos
+          items:
+            $ref: '#/components/schemas/Video'
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          description: HTTP status code
+        message:
+          type: string
+          description: Error message
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: Bad request
+    Unauthorized:
+      description: Unauthorized access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 401
+            message: Unauthorized access
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 404
+            message: Resource not found
+    ServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 500
+            message: Internal server error
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
