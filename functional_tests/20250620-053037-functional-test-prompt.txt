@@ -1,0 +1,622 @@
+# Comprehensive Functional Test Cases for YouTube Website
+
+## 1. Homepage Functionality
+
+### Test Case ID: HP-001
+**Test Title:** Homepage Loading Verification  
+**Preconditions:** Internet connection is available  
+**Steps to Reproduce:**
+1. Open a browser
+2. Navigate to youtube.com
+3. Observe the homepage loading
+
+**Expected Result:** YouTube homepage loads completely with header, sidebar, and recommended videos section visible  
+**Priority:** High
+
+### Test Case ID: HP-002
+**Test Title:** Recommended Videos Display  
+**Preconditions:** User is on YouTube homepage  
+**Steps to Reproduce:**
+1. Observe the main content area of the homepage
+2. Verify recommended videos are displayed with thumbnails, titles, and channel information
+
+**Expected Result:** Multiple recommended videos appear in a grid layout with thumbnails, titles, view counts, and upload times  
+**Priority:** High
+
+### Test Case ID: HP-003
+**Test Title:** Trending Section Verification  
+**Preconditions:** User is on YouTube homepage  
+**Steps to Reproduce:**
+1. Scroll through the homepage or navigate to the Trending section
+2. Verify trending videos are displayed
+
+**Expected Result:** Trending section shows popular videos with proper thumbnails and metadata  
+**Priority:** Medium
+
+### Test Case ID: HP-004
+**Test Title:** Shorts Section Display  
+**Preconditions:** User is on YouTube homepage  
+**Steps to Reproduce:**
+1. Scroll through the homepage to locate the Shorts section
+2. Verify Shorts videos are displayed in a horizontal scrollable format
+
+**Expected Result:** Shorts section appears with vertical video thumbnails in a scrollable carousel  
+**Priority:** Medium
+
+### Test Case ID: HP-005
+**Test Title:** Homepage Responsiveness - Desktop  
+**Preconditions:** Desktop browser is open  
+**Steps to Reproduce:**
+1. Navigate to youtube.com
+2. Resize browser window to different dimensions
+3. Observe layout changes
+
+**Expected Result:** Homepage layout adjusts appropriately to different window sizes while maintaining functionality  
+**Priority:** High
+
+### Test Case ID: HP-006
+**Test Title:** Homepage Responsiveness - Mobile  
+**Preconditions:** Mobile browser is open  
+**Steps to Reproduce:**
+1. Navigate to youtube.com on a mobile device
+2. Observe the layout and navigation elements
+3. Rotate device between portrait and landscape orientations
+
+**Expected Result:** Homepage displays in mobile-optimized format with appropriate navigation elements and adapts to orientation changes  
+**Priority:** High
+
+## 2. Search Functionality
+
+### Test Case ID: SF-001
+**Test Title:** Basic Keyword Search  
+**Preconditions:** User is on YouTube homepage  
+**Steps to Reproduce:**
+1. Click on the search bar
+2. Type a keyword (e.g., "music")
+3. Press Enter or click the search icon
+
+**Expected Result:** Search results page displays with videos related to the search keyword  
+**Priority:** High
+
+### Test Case ID: SF-002
+**Test Title:** Search Results Filtering  
+**Preconditions:** User has performed a search  
+**Steps to Reproduce:**
+1. On the search results page, click on the "Filters" button
+2. Select different filter options (Upload date, Type, Duration, Features)
+3. Observe the filtered results
+
+**Expected Result:** Search results update according to the selected filters  
+**Priority:** High
+
+### Test Case ID: SF-003
+**Test Title:** Search Autocomplete Functionality  
+**Preconditions:** User is on YouTube homepage  
+**Steps to Reproduce:**
+1. Click on the search bar
+2. Slowly type a partial search term (e.g., "how to")
+3. Pause typing and observe
+
+**Expected Result:** Autocomplete suggestions appear below the search bar with relevant search terms  
+**Priority:** Medium
+
+### Test Case ID: SF-004
+**Test Title:** Empty Search Query Handling  
+**Preconditions:** User is on YouTube homepage  
+**Steps to Reproduce:**
+1. Click on the search bar
+2. Without typing anything, press Enter or click the search icon
+
+**Expected Result:** No search is performed, user remains on the current page  
+**Priority:** Low
+
+### Test Case ID: SF-005
+**Test Title:** Special Characters Search  
+**Preconditions:** User is on YouTube homepage  
+**Steps to Reproduce:**
+1. Click on the search bar
+2. Enter special characters (e.g., "#$%^&*")
+3. Press Enter or click the search icon
+
+**Expected Result:** System handles special characters appropriately, either showing relevant results or a "no results found" message  
+**Priority:** Low
+
+## 3. Video Playback
+
+### Test Case ID: VP-001
+**Test Title:** Basic Video Playback  
+**Preconditions:** User is on YouTube homepage  
+**Steps to Reproduce:**
+1. Click on any video thumbnail
+2. Observe the video page loading
+3. Verify the video begins to play
+
+**Expected Result:** Selected video loads and begins playback automatically  
+**Priority:** High
+
+### Test Case ID: VP-002
+**Test Title:** Video Quality Adjustment  
+**Preconditions:** User is watching a video  
+**Steps to Reproduce:**
+1. Click on the settings (gear) icon in the video player
+2. Select "Quality"
+3. Choose different quality options (1080p, 720p, etc.)
+
+**Expected Result:** Video quality changes according to the selected option  
+**Priority:** High
+
+### Test Case ID: VP-003
+**Test Title:** Subtitles/Closed Captions  
+**Preconditions:** User is watching a video that has subtitles available  
+**Steps to Reproduce:**
+1. Click on the "CC" button in the video player
+2. Select a subtitle language if multiple are available
+3. Observe the subtitles display
+
+**Expected Result:** Subtitles appear on the video and sync with the audio  
+**Priority:** Medium
+
+### Test Case ID: VP-004
+**Test Title:** Full-Screen Mode  
+**Preconditions:** User is watching a video  
+**Steps to Reproduce:**
+1. Click on the full-screen button in the video player
+2. Observe the video in full-screen mode
+3. Press ESC key to exit full-screen
+
+**Expected Result:** Video expands to fill the entire screen and returns to normal view when exiting  
+**Priority:** High
+
+### Test Case ID: VP-005
+**Test Title:** Theater Mode  
+**Preconditions:** User is watching a video  
+**Steps to Reproduce:**
+1. Click on the theater mode button in the video player
+2. Observe the video player size change
+
+**Expected Result:** Video player expands horizontally to fill more of the browser window  
+**Priority:** Medium
+
+### Test Case ID: VP-006
+**Test Title:** Mini-Player Functionality  
+**Preconditions:** User is watching a video  
+**Steps to Reproduce:**
+1. Click on the mini-player button in the video player
+2. Navigate to another page on YouTube
+3. Interact with the mini-player (pause, close)
+
+**Expected Result:** Video continues playing in a small floating window while browsing other content  
+**Priority:** Medium
+
+### Test Case ID: VP-007
+**Test Title:** Video Buffering Handling  
+**Preconditions:** User is on a connection with limited bandwidth  
+**Steps to Reproduce:**
+1. Start playing a high-quality video
+2. Observe the buffering behavior
+
+**Expected Result:** Loading spinner appears during buffering and playback resumes when sufficient content is loaded  
+**Priority:** High
+
+### Test Case ID: VP-008
+**Test Title:** Video Playback Controls  
+**Preconditions:** User is watching a video  
+**Steps to Reproduce:**
+1. Test play/pause button
+2. Test volume controls
+3. Test video timeline scrubbing
+4. Test playback speed options
+
+**Expected Result:** All playback controls function as expected  
+**Priority:** High
+
+## 4. User Authentication
+
+### Test Case ID: UA-001
+**Test Title:** Sign In with Google Account  
+**Preconditions:** User has a Google account and is not signed in  
+**Steps to Reproduce:**
+1. Click on the "Sign In" button
+2. Enter Google account credentials
+3. Complete the authentication process
+
+**Expected Result:** User is successfully signed in and redirected to YouTube homepage with personalized content  
+**Priority:** High
+
+### Test Case ID: UA-002
+**Test Title:** Sign Out Functionality  
+**Preconditions:** User is signed in to YouTube  
+**Steps to Reproduce:**
+1. Click on the user profile icon
+2. Select "Sign out" from the dropdown menu
+
+**Expected Result:** User is signed out and returned to the non-personalized YouTube view  
+**Priority:** High
+
+### Test Case ID: UA-003
+**Test Title:** Multi-Device Login/Logout  
+**Preconditions:** User has access to multiple devices and is signed in on one device  
+**Steps to Reproduce:**
+1. Sign in to YouTube on Device A
+2. Sign in to YouTube on Device B with the same account
+3. Sign out from Device A
+4. Check authentication status on Device B
+
+**Expected Result:** Sign-out on one device does not affect authentication on other devices  
+**Priority:** Medium
+
+### Test Case ID: UA-004
+**Test Title:** Access Control for Personalized Features  
+**Preconditions:** None  
+**Steps to Reproduce:**
+1. As a non-authenticated user, attempt to access:
+   - Liked videos
+   - Watch history
+   - Subscriptions
+   - Personal playlists
+
+**Expected Result:** User is prompted to sign in when attempting to access personalized features  
+**Priority:** High
+
+## 5. Account and Profile
+
+### Test Case ID: AP-001
+**Test Title:** View User Profile  
+**Preconditions:** User is signed in  
+**Steps to Reproduce:**
+1. Click on the user profile icon
+2. Select "Your channel" from the dropdown menu
+
+**Expected Result:** User's channel page loads showing their profile information  
+**Priority:** Medium
+
+### Test Case ID: AP-002
+**Test Title:** Edit User Profile  
+**Preconditions:** User is signed in  
+**Steps to Reproduce:**
+1. Navigate to user's channel
+2. Click on "Customize Channel" or equivalent
+3. Edit profile information (name, description, etc.)
+4. Save changes
+
+**Expected Result:** Profile information is updated and changes are visible  
+**Priority:** Medium
+
+### Test Case ID: AP-003
+**Test Title:** Create New Playlist  
+**Preconditions:** User is signed in  
+**Steps to Reproduce:**
+1. Navigate to any video
+2. Click "Save" button
+3. Select "Create new playlist"
+4. Enter playlist name and privacy setting
+5. Click "Create"
+
+**Expected Result:** New playlist is created and the video is added to it  
+**Priority:** Medium
+
+### Test Case ID: AP-004
+**Test Title:** Access Watch History  
+**Preconditions:** User is signed in and has watched videos previously  
+**Steps to Reproduce:**
+1. Click on the sidebar menu
+2. Select "History"
+
+**Expected Result:** Watch history page loads showing previously watched videos in chronological order  
+**Priority:** Medium
+
+### Test Case ID: AP-005
+**Test Title:** Access Liked Videos  
+**Preconditions:** User is signed in and has liked videos previously  
+**Steps to Reproduce:**
+1. Click on the sidebar menu
+2. Select "Liked videos"
+
+**Expected Result:** Liked videos page loads showing all videos the user has liked  
+**Priority:** Medium
+
+### Test Case ID: AP-006
+**Test Title:** View Subscriptions List  
+**Preconditions:** User is signed in and has subscribed to channels  
+**Steps to Reproduce:**
+1. Click on the sidebar menu
+2. Select "Subscriptions"
+
+**Expected Result:** Subscriptions page loads showing recent videos from subscribed channels  
+**Priority:** Medium
+
+## 6. Interactions
+
+### Test Case ID: INT-001
+**Test Title:** Like a Video  
+**Preconditions:** User is signed in and watching a video  
+**Steps to Reproduce:**
+1. Click the "Like" (thumbs up) button under the video
+2. Observe the like count and button state
+
+**Expected Result:** Like button becomes highlighted and like count increases  
+**Priority:** High
+
+### Test Case ID: INT-002
+**Test Title:** Dislike a Video  
+**Preconditions:** User is signed in and watching a video  
+**Steps to Reproduce:**
+1. Click the "Dislike" (thumbs down) button under the video
+2. Observe the button state
+
+**Expected Result:** Dislike button becomes highlighted  
+**Priority:** High
+
+### Test Case ID: INT-003
+**Test Title:** Add a Comment  
+**Preconditions:** User is signed in and watching a video  
+**Steps to Reproduce:**
+1. Scroll to the comments section
+2. Click in the comment box
+3. Type a comment
+4. Click "Comment" button
+
+**Expected Result:** Comment is posted and appears in the comments section  
+**Priority:** High
+
+### Test Case ID: INT-004
+**Test Title:** Reply to a Comment  
+**Preconditions:** User is signed in and viewing a video with comments  
+**Steps to Reproduce:**
+1. Find an existing comment
+2. Click "Reply" under the comment
+3. Type a reply
+4. Click "Reply" button
+
+**Expected Result:** Reply is posted and appears nested under the original comment  
+**Priority:** Medium
+
+### Test Case ID: INT-005
+**Test Title:** Report a Video  
+**Preconditions:** User is watching a video  
+**Steps to Reproduce:**
+1. Click the "More" (three dots) button below the video
+2. Select "Report"
+3. Choose a reason for reporting
+4. Submit the report
+
+**Expected Result:** Report is submitted and confirmation message is displayed  
+**Priority:** Medium
+
+### Test Case ID: INT-006
+**Test Title:** Report a Comment  
+**Preconditions:** User is viewing a video with comments  
+**Steps to Reproduce:**
+1. Find a comment
+2. Click the "More" (three dots) button next to the comment
+3. Select "Report"
+4. Choose a reason for reporting
+5. Submit the report
+
+**Expected Result:** Report is submitted and confirmation message is displayed  
+**Priority:** Low
+
+### Test Case ID: INT-007
+**Test Title:** Share a Video via Link  
+**Preconditions:** User is watching a video  
+**Steps to Reproduce:**
+1. Click the "Share" button below the video
+2. Select "Copy link" option
+3. Paste the link in a new browser tab
+
+**Expected Result:** Link is copied and when pasted, leads to the same video  
+**Priority:** High
+
+### Test Case ID: INT-008
+**Test Title:** Share a Video via Social Media  
+**Preconditions:** User is watching a video  
+**Steps to Reproduce:**
+1. Click the "Share" button below the video
+2. Select a social media platform (e.g., Twitter, Facebook)
+3. Verify the sharing dialog opens
+
+**Expected Result:** Appropriate sharing dialog opens with video information pre-populated  
+**Priority:** Medium
+
+## 7. Upload and Creator Features
+
+### Test Case ID: UCF-001
+**Test Title:** Upload a New Video  
+**Preconditions:** User is signed in  
+**Steps to Reproduce:**
+1. Click on the "Create" (camera) icon in the header
+2. Select "Upload video"
+3. Select a video file from the local device
+4. Wait for upload to complete
+
+**Expected Result:** Video file uploads successfully and proceeds to details screen  
+**Priority:** High
+
+### Test Case ID: UCF-002
+**Test Title:** Add Video Metadata  
+**Preconditions:** User has uploaded a video and is on the details screen  
+**Steps to Reproduce:**
+1. Enter a title for the video
+2. Enter a description
+3. Add tags
+4. Select or upload a custom thumbnail
+5. Click "Next"
+
+**Expected Result:** All metadata is saved and user proceeds to the next step  
+**Priority:** High
+
+### Test Case ID: UCF-003
+**Test Title:** Set Video Visibility  
+**Preconditions:** User has uploaded a video and completed metadata  
+**Steps to Reproduce:**
+1. On the visibility settings screen, select one option:
+   - Public
+   - Unlisted
+   - Private
+2. Click "Save" or "Publish"
+
+**Expected Result:** Video is published with the selected visibility setting  
+**Priority:** High
+
+### Test Case ID: UCF-004
+**Test Title:** Monitor Video Processing  
+**Preconditions:** User has uploaded a video  
+**Steps to Reproduce:**
+1. After upload, observe the processing status
+2. Wait for processing to complete
+
+**Expected Result:** Processing progress is displayed and completes successfully  
+**Priority:** Medium
+
+### Test Case ID: UCF-005
+**Test Title:** Handle Upload Failure  
+**Preconditions:** User is attempting to upload a video with a poor connection  
+**Steps to Reproduce:**
+1. Start uploading a video
+2. Simulate connection loss during upload
+
+**Expected Result:** Error message is displayed with retry option  
+**Priority:** Medium
+
+## 8. Notifications and Subscriptions
+
+### Test Case ID: NS-001
+**Test Title:** Subscribe to a Channel  
+**Preconditions:** User is signed in and viewing a channel or video  
+**Steps to Reproduce:**
+1. Click the "Subscribe" button on a channel page or under a video
+2. Observe the subscription status change
+
+**Expected Result:** Subscribe button changes to "Subscribed" and user is subscribed to the channel  
+**Priority:** High
+
+### Test Case ID: NS-002
+**Test Title:** Unsubscribe from a Channel  
+**Preconditions:** User is signed in and subscribed to a channel  
+**Steps to Reproduce:**
+1. Navigate to a subscribed channel
+2. Click the "Subscribed" button
+3. Confirm unsubscription
+
+**Expected Result:** User is unsubscribed from the channel and button returns to "Subscribe"  
+**Priority:** High
+
+### Test Case ID: NS-003
+**Test Title:** Bell Notification Settings  
+**Preconditions:** User is signed in and subscribed to a channel  
+**Steps to Reproduce:**
+1. Click the bell icon next to the "Subscribed" button
+2. Select a notification option:
+   - All
+   - Personalized
+   - None
+
+**Expected Result:** Notification preference is saved and bell icon reflects the selected option  
+**Priority:** Medium
+
+### Test Case ID: NS-004
+**Test Title:** Receive Upload Notifications  
+**Preconditions:** User is signed in, subscribed to a channel with "All" notifications enabled  
+**Steps to Reproduce:**
+1. Wait for the subscribed channel to upload a new video
+2. Check the notifications bell in the YouTube header
+
+**Expected Result:** Notification appears for the new upload  
+**Priority:** Medium
+
+## 9. Mobile Web and Responsiveness
+
+### Test Case ID: MWR-001
+**Test Title:** Mobile Layout Verification  
+**Preconditions:** Mobile browser is open  
+**Steps to Reproduce:**
+1. Navigate to youtube.com on a mobile device
+2. Observe the layout and navigation elements
+
+**Expected Result:** YouTube displays in mobile-optimized format with bottom navigation bar  
+**Priority:** High
+
+### Test Case ID: MWR-002
+**Test Title:** Mobile Menu Functionality  
+**Preconditions:** User is on YouTube mobile web  
+**Steps to Reproduce:**
+1. Tap on the menu icon (three lines)
+2. Verify menu opens
+3. Navigate through different menu options
+
+**Expected Result:** Menu opens smoothly and navigation works correctly  
+**Priority:** High
+
+### Test Case ID: MWR-003
+**Test Title:** Touch-Based Video Controls  
+**Preconditions:** User is watching a video on mobile web  
+**Steps to Reproduce:**
+1. Tap on the video to show/hide controls
+2. Double-tap left/right sides to seek backward/forward
+3. Pinch to exit full-screen mode
+
+**Expected Result:** Touch gestures control the video playback as expected  
+**Priority:** High
+
+### Test Case ID: MWR-004
+**Test Title:** Orientation Change Handling  
+**Preconditions:** User is on YouTube mobile web  
+**Steps to Reproduce:**
+1. Start playing a video
+2. Rotate device from portrait to landscape
+
+**Expected Result:** Video automatically switches to full-screen landscape mode  
+**Priority:** High
+
+## 10. Accessibility and Error Handling
+
+### Test Case ID: AEH-001
+**Test Title:** Keyboard Navigation  
+**Preconditions:** Desktop browser is open  
+**Steps to Reproduce:**
+1. Navigate to youtube.com
+2. Use Tab key to navigate through elements
+3. Use Enter key to select items
+4. Use spacebar to play/pause videos
+
+**Expected Result:** All interactive elements are accessible and operable via keyboard  
+**Priority:** Medium
+
+### Test Case ID: AEH-002
+**Test Title:** Screen Reader Compatibility  
+**Preconditions:** Screen reader software is active  
+**Steps to Reproduce:**
+1. Navigate through YouTube with screen reader enabled
+2. Interact with various elements
+
+**Expected Result:** Screen reader correctly announces elements and their states  
+**Priority:** Medium
+
+### Test Case ID: AEH-003
+**Test Title:** Video Not Found Error  
+**Preconditions:** None  
+**Steps to Reproduce:**
+1. Attempt to access a non-existent video URL (e.g., youtube.com/watch?v=invalid-id)
+
+**Expected Result:** Appropriate error message is displayed indicating the video is not available  
+**Priority:** Medium
+
+### Test Case ID: AEH-004
+**Test Title:** Upload Error Handling  
+**Preconditions:** User is signed in  
+**Steps to Reproduce:**
+1. Attempt to upload an invalid file format
+
+**Expected Result:** Clear error message is displayed explaining the issue  
+**Priority:** Medium
+
+### Test Case ID: AEH-005
+**Test Title:** Network Error Recovery  
+**Preconditions:** User is browsing YouTube  
+**Steps to Reproduce:**
+1. Disable network connection
+2. Attempt to perform actions
+3. Re-enable network connection
+
+**Expected Result:** Appropriate error messages are shown during disconnection and functionality recovers when connection is restored  
+**Priority:** High
