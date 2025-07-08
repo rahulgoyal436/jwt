@@ -1,0 +1,1305 @@
+openapi: 3.0.0
+info:
+  title: YouTube API
+  description: API for interacting with YouTube services
+  version: 1.0.0
+  contact:
+    name: Google
+    url: https://developers.google.com/youtube
+servers:
+  - url: https://www.googleapis.com/youtube/v3
+    description: YouTube API v3 production server
+
+security:
+  - ApiKeyAuth: []
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: API key for authentication with YouTube API
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 400
+            message:
+              type: string
+              example: "Invalid request"
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  domain:
+                    type: string
+                  reason:
+                    type: string
+
+    VideoListResponse:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: "youtube#videoListResponse"
+        etag:
+          type: string
+        pageInfo:
+          type: object
+          properties:
+            totalResults:
+              type: integer
+            resultsPerPage:
+              type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Video'
+
+    Video:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: "youtube#video"
+        etag:
+          type: string
+        id:
+          type: string
+        snippet:
+          type: object
+          properties:
+            publishedAt:
+              type: string
+              format: date-time
+            channelId:
+              type: string
+            title:
+              type: string
+            description:
+              type: string
+            thumbnails:
+              type: object
+              properties:
+                default:
+                  $ref: '#/components/schemas/Thumbnail'
+                medium:
+                  $ref: '#/components/schemas/Thumbnail'
+                high:
+                  $ref: '#/components/schemas/Thumbnail'
+            channelTitle:
+              type: string
+            tags:
+              type: array
+              items:
+                type: string
+            categoryId:
+              type: string
+        contentDetails:
+          type: object
+          properties:
+            duration:
+              type: string
+            dimension:
+              type: string
+            definition:
+              type: string
+            caption:
+              type: boolean
+            licensedContent:
+              type: boolean
+        statistics:
+          type: object
+          properties:
+            viewCount:
+              type: string
+            likeCount:
+              type: string
+            dislikeCount:
+              type: string
+            favoriteCount:
+              type: string
+            commentCount:
+              type: string
+
+    Thumbnail:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+        width:
+          type: integer
+        height:
+          type: integer
+
+    SearchListResponse:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: "youtube#searchListResponse"
+        etag:
+          type: string
+        nextPageToken:
+          type: string
+        prevPageToken:
+          type: string
+        pageInfo:
+          type: object
+          properties:
+            totalResults:
+              type: integer
+            resultsPerPage:
+              type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchResult'
+
+    SearchResult:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: "youtube#searchResult"
+        etag:
+          type: string
+        id:
+          type: object
+          properties:
+            kind:
+              type: string
+            videoId:
+              type: string
+            channelId:
+              type: string
+            playlistId:
+              type: string
+        snippet:
+          type: object
+          properties:
+            publishedAt:
+              type: string
+              format: date-time
+            channelId:
+              type: string
+            title:
+              type: string
+            description:
+              type: string
+            thumbnails:
+              type: object
+              properties:
+                default:
+                  $ref: '#/components/schemas/Thumbnail'
+                medium:
+                  $ref: '#/components/schemas/Thumbnail'
+                high:
+                  $ref: '#/components/schemas/Thumbnail'
+            channelTitle:
+              type: string
+            liveBroadcastContent:
+              type: string
+
+    CommentListResponse:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: "youtube#commentListResponse"
+        etag:
+          type: string
+        nextPageToken:
+          type: string
+        pageInfo:
+          type: object
+          properties:
+            totalResults:
+              type: integer
+            resultsPerPage:
+              type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+
+    Comment:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: "youtube#comment"
+        etag:
+          type: string
+        id:
+          type: string
+        snippet:
+          type: object
+          properties:
+            authorDisplayName:
+              type: string
+            authorProfileImageUrl:
+              type: string
+            authorChannelUrl:
+              type: string
+            authorChannelId:
+              type: object
+              properties:
+                value:
+                  type: string
+            videoId:
+              type: string
+            textDisplay:
+              type: string
+            textOriginal:
+              type: string
+            parentId:
+              type: string
+            canRate:
+              type: boolean
+            viewerRating:
+              type: string
+            likeCount:
+              type: integer
+            publishedAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+
+    ChannelListResponse:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: "youtube#channelListResponse"
+        etag:
+          type: string
+        pageInfo:
+          type: object
+          properties:
+            totalResults:
+              type: integer
+            resultsPerPage:
+              type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Channel'
+
+    Channel:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: "youtube#channel"
+        etag:
+          type: string
+        id:
+          type: string
+        snippet:
+          type: object
+          properties:
+            title:
+              type: string
+            description:
+              type: string
+            customUrl:
+              type: string
+            publishedAt:
+              type: string
+              format: date-time
+            thumbnails:
+              type: object
+              properties:
+                default:
+                  $ref: '#/components/schemas/Thumbnail'
+                medium:
+                  $ref: '#/components/schemas/Thumbnail'
+                high:
+                  $ref: '#/components/schemas/Thumbnail'
+            localized:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+        contentDetails:
+          type: object
+          properties:
+            relatedPlaylists:
+              type: object
+              properties:
+                likes:
+                  type: string
+                favorites:
+                  type: string
+                uploads:
+                  type: string
+        statistics:
+          type: object
+          properties:
+            viewCount:
+              type: string
+            subscriberCount:
+              type: string
+            hiddenSubscriberCount:
+              type: boolean
+            videoCount:
+              type: string
+
+    PlaylistListResponse:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: "youtube#playlistListResponse"
+        etag:
+          type: string
+        nextPageToken:
+          type: string
+        prevPageToken:
+          type: string
+        pageInfo:
+          type: object
+          properties:
+            totalResults:
+              type: integer
+            resultsPerPage:
+              type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Playlist'
+
+    Playlist:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: "youtube#playlist"
+        etag:
+          type: string
+        id:
+          type: string
+        snippet:
+          type: object
+          properties:
+            publishedAt:
+              type: string
+              format: date-time
+            channelId:
+              type: string
+            title:
+              type: string
+            description:
+              type: string
+            thumbnails:
+              type: object
+              properties:
+                default:
+                  $ref: '#/components/schemas/Thumbnail'
+                medium:
+                  $ref: '#/components/schemas/Thumbnail'
+                high:
+                  $ref: '#/components/schemas/Thumbnail'
+            channelTitle:
+              type: string
+            localized:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+        status:
+          type: object
+          properties:
+            privacyStatus:
+              type: string
+              enum: [public, private, unlisted]
+
+    VideoUploadResponse:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: "youtube#video"
+        etag:
+          type: string
+        id:
+          type: string
+        snippet:
+          type: object
+          properties:
+            publishedAt:
+              type: string
+              format: date-time
+            channelId:
+              type: string
+            title:
+              type: string
+            description:
+              type: string
+            thumbnails:
+              type: object
+              properties:
+                default:
+                  $ref: '#/components/schemas/Thumbnail'
+                medium:
+                  $ref: '#/components/schemas/Thumbnail'
+                high:
+                  $ref: '#/components/schemas/Thumbnail'
+            channelTitle:
+              type: string
+            tags:
+              type: array
+              items:
+                type: string
+            categoryId:
+              type: string
+            liveBroadcastContent:
+              type: string
+            defaultLanguage:
+              type: string
+            localized:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+            defaultAudioLanguage:
+              type: string
+        status:
+          type: object
+          properties:
+            uploadStatus:
+              type: string
+              enum: [uploaded, processed, failed]
+            privacyStatus:
+              type: string
+              enum: [public, private, unlisted]
+            license:
+              type: string
+            embeddable:
+              type: boolean
+            publicStatsViewable:
+              type: boolean
+
+    SubscriptionListResponse:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: "youtube#subscriptionListResponse"
+        etag:
+          type: string
+        nextPageToken:
+          type: string
+        prevPageToken:
+          type: string
+        pageInfo:
+          type: object
+          properties:
+            totalResults:
+              type: integer
+            resultsPerPage:
+              type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subscription'
+
+    Subscription:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: "youtube#subscription"
+        etag:
+          type: string
+        id:
+          type: string
+        snippet:
+          type: object
+          properties:
+            publishedAt:
+              type: string
+              format: date-time
+            channelTitle:
+              type: string
+            title:
+              type: string
+            description:
+              type: string
+            resourceId:
+              type: object
+              properties:
+                kind:
+                  type: string
+                channelId:
+                  type: string
+            channelId:
+              type: string
+            thumbnails:
+              type: object
+              properties:
+                default:
+                  $ref: '#/components/schemas/Thumbnail'
+                medium:
+                  $ref: '#/components/schemas/Thumbnail'
+                high:
+                  $ref: '#/components/schemas/Thumbnail'
+
+paths:
+  /search:
+    get:
+      summary: Search for YouTube resources
+      description: Returns a collection of search results that match the query parameters
+      operationId: youtubeSearch
+      tags:
+        - Search
+      parameters:
+        - name: part
+          in: query
+          description: The part parameter specifies a comma-separated list of one or more search resource properties
+          required: true
+          schema:
+            type: string
+            example: "snippet"
+        - name: q
+          in: query
+          description: The q parameter specifies the query term to search for
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: The type parameter restricts a search query to only retrieve a particular type of resource
+          schema:
+            type: string
+            enum: [channel, playlist, video]
+        - name: maxResults
+          in: query
+          description: The maxResults parameter specifies the maximum number of items that should be returned in the result set
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 5
+        - name: pageToken
+          in: query
+          description: The pageToken parameter identifies a specific page in the result set that should be returned
+          schema:
+            type: string
+        - name: order
+          in: query
+          description: The order parameter specifies the method that will be used to order resources in the API response
+          schema:
+            type: string
+            enum: [date, rating, relevance, title, videoCount, viewCount]
+            default: relevance
+        - name: publishedAfter
+          in: query
+          description: The publishedAfter parameter indicates that the API response should only contain resources created after the specified time
+          schema:
+            type: string
+            format: date-time
+        - name: publishedBefore
+          in: query
+          description: The publishedBefore parameter indicates that the API response should only contain resources created before the specified time
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /videos:
+    get:
+      summary: Get video details
+      description: Returns a list of videos that match the API request parameters
+      operationId: youtubeVideosGet
+      tags:
+        - Videos
+      parameters:
+        - name: part
+          in: query
+          description: The part parameter specifies a comma-separated list of one or more video resource properties
+          required: true
+          schema:
+            type: string
+            example: "snippet,contentDetails,statistics"
+        - name: id
+          in: query
+          description: The id parameter specifies a comma-separated list of the YouTube video ID(s) for the resource(s) that are being retrieved
+          schema:
+            type: string
+        - name: chart
+          in: query
+          description: The chart parameter identifies the chart that you want to retrieve
+          schema:
+            type: string
+            enum: [mostPopular]
+        - name: maxResults
+          in: query
+          description: The maxResults parameter specifies the maximum number of items that should be returned in the result set
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 5
+        - name: pageToken
+          in: query
+          description: The pageToken parameter identifies a specific page in the result set that should be returned
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
+    post:
+      summary: Upload a video
+      description: Uploads a video to YouTube
+      operationId: youtubeVideosPost
+      tags:
+        - Videos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                snippet:
+                  type: object
+                  required:
+                    - title
+                  properties:
+                    title:
+                      type: string
+                      description: The video's title
+                    description:
+                      type: string
+                      description: The video's description
+                    tags:
+                      type: array
+                      items:
+                        type: string
+                      description: A list of keyword tags associated with the video
+                    categoryId:
+                      type: string
+                      description: The YouTube video category ID
+                status:
+                  type: object
+                  properties:
+                    privacyStatus:
+                      type: string
+                      enum: [private, public, unlisted]
+                      description: The video's privacy status
+                    embeddable:
+                      type: boolean
+                      description: Indicates whether the video can be embedded on another website
+                    license:
+                      type: string
+                      enum: [youtube, creativeCommon]
+                      description: The video's license
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoUploadResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /channels:
+    get:
+      summary: Get channel details
+      description: Returns a collection of zero or more channel resources that match the request criteria
+      operationId: youtubeChannelsGet
+      tags:
+        - Channels
+      parameters:
+        - name: part
+          in: query
+          description: The part parameter specifies a comma-separated list of one or more channel resource properties
+          required: true
+          schema:
+            type: string
+            example: "snippet,contentDetails,statistics"
+        - name: id
+          in: query
+          description: The id parameter specifies a comma-separated list of the YouTube channel ID(s) for the resource(s) that are being retrieved
+          schema:
+            type: string
+        - name: mine
+          in: query
+          description: This parameter can only be used in a properly authorized request. Set this parameter's value to true to retrieve the authenticated user's channel
+          schema:
+            type: boolean
+        - name: maxResults
+          in: query
+          description: The maxResults parameter specifies the maximum number of items that should be returned in the result set
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 5
+        - name: pageToken
+          in: query
+          description: The pageToken parameter identifies a specific page in the result set that should be returned
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /playlists:
+    get:
+      summary: Get playlist details
+      description: Returns a collection of playlists that match the API request parameters
+      operationId: youtubePlaylistsGet
+      tags:
+        - Playlists
+      parameters:
+        - name: part
+          in: query
+          description: The part parameter specifies a comma-separated list of one or more playlist resource properties
+          required: true
+          schema:
+            type: string
+            example: "snippet,status"
+        - name: id
+          in: query
+          description: The id parameter specifies a comma-separated list of the YouTube playlist ID(s) for the resource(s) that are being retrieved
+          schema:
+            type: string
+        - name: mine
+          in: query
+          description: This parameter can only be used in a properly authorized request. Set this parameter's value to true to retrieve all of the playlists owned by the authenticated user
+          schema:
+            type: boolean
+        - name: channelId
+          in: query
+          description: This value indicates that the API should only return the specified channel's playlists
+          schema:
+            type: string
+        - name: maxResults
+          in: query
+          description: The maxResults parameter specifies the maximum number of items that should be returned in the result set
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 5
+        - name: pageToken
+          in: query
+          description: The pageToken parameter identifies a specific page in the result set that should be returned
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
+    post:
+      summary: Create a playlist
+      description: Creates a playlist
+      operationId: youtubePlaylistsPost
+      tags:
+        - Playlists
+      parameters:
+        - name: part
+          in: query
+          description: The part parameter serves two purposes in this operation. It identifies the properties that the write operation will set as well as the properties that the API response will include
+          required: true
+          schema:
+            type: string
+            example: "snippet,status"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                snippet:
+                  type: object
+                  required:
+                    - title
+                  properties:
+                    title:
+                      type: string
+                      description: The playlist's title
+                    description:
+                      type: string
+                      description: The playlist's description
+                status:
+                  type: object
+                  properties:
+                    privacyStatus:
+                      type: string
+                      enum: [private, public, unlisted]
+                      description: The playlist's privacy status
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /comments:
+    get:
+      summary: Get comments
+      description: Returns a list of comments that match the API request parameters
+      operationId: youtubeCommentsGet
+      tags:
+        - Comments
+      parameters:
+        - name: part
+          in: query
+          description: The part parameter specifies a comma-separated list of one or more comment resource properties
+          required: true
+          schema:
+            type: string
+            example: "snippet"
+        - name: id
+          in: query
+          description: The id parameter specifies a comma-separated list of comment IDs for the resources that are being retrieved
+          schema:
+            type: string
+        - name: parentId
+          in: query
+          description: The parentId parameter specifies the ID of the comment for which replies should be retrieved
+          schema:
+            type: string
+        - name: maxResults
+          in: query
+          description: The maxResults parameter specifies the maximum number of items that should be returned in the result set
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: pageToken
+          in: query
+          description: The pageToken parameter identifies a specific page in the result set that should be returned
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
+    post:
+      summary: Create a comment
+      description: Creates a comment
+      operationId: youtubeCommentsPost
+      tags:
+        - Comments
+      parameters:
+        - name: part
+          in: query
+          description: The part parameter identifies the properties that the API response will include
+          required: true
+          schema:
+            type: string
+            example: "snippet"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                snippet:
+                  type: object
+                  required:
+                    - textOriginal
+                    - videoId
+                  properties:
+                    textOriginal:
+                      type: string
+                      description: The comment's text
+                    videoId:
+                      type: string
+                      description: The ID of the video that the comment is being added to
+                    parentId:
+                      type: string
+                      description: The ID of the comment that this comment is replying to
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /subscriptions:
+    get:
+      summary: Get subscriptions
+      description: Returns a list of subscription resources that match the API request criteria
+      operationId: youtubeSubscriptionsGet
+      tags:
+        - Subscriptions
+      parameters:
+        - name: part
+          in: query
+          description: The part parameter specifies a comma-separated list of one or more subscription resource properties
+          required: true
+          schema:
+            type: string
+            example: "snippet"
+        - name: channelId
+          in: query
+          description: The channelId parameter specifies a YouTube channel ID. The API will only return that channel's subscriptions
+          schema:
+            type: string
+        - name: id
+          in: query
+          description: The id parameter specifies a comma-separated list of the YouTube subscription ID(s) for the resource(s) that are being retrieved
+          schema:
+            type: string
+        - name: mine
+          in: query
+          description: This parameter can only be used in a properly authorized request. Set this parameter's value to true to retrieve a feed of the authenticated user's subscriptions
+          schema:
+            type: boolean
+        - name: maxResults
+          in: query
+          description: The maxResults parameter specifies the maximum number of items that should be returned in the result set
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 5
+        - name: pageToken
+          in: query
+          description: The pageToken parameter identifies a specific page in the result set that should be returned
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
+    post:
+      summary: Subscribe to a channel
+      description: Adds a subscription for the authenticated user's channel
+      operationId: youtubeSubscriptionsPost
+      tags:
+        - Subscriptions
+      parameters:
+        - name: part
+          in: query
+          description: The part parameter serves two purposes in this operation. It identifies the properties that the write operation will set as well as the properties that the API response will include
+          required: true
+          schema:
+            type: string
+            example: "snippet"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                snippet:
+                  type: object
+                  required:
+                    - resourceId
+                  properties:
+                    resourceId:
+                      type: object
+                      required:
+                        - kind
+                        - channelId
+                      properties:
+                        kind:
+                          type: string
+                          example: "youtube#channel"
+                        channelId:
+                          type: string
+                          description: The ID of the channel to subscribe to
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
