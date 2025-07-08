@@ -7,6 +7,8 @@ roost_feedback [04/07/2025, 1:20:57 PM]:enhance and improve the test\n\n
 roost_feedback [08/07/2025, 12:25:39 PM]:enhance the test feature file\n\n
 
 roost_feedback [08/07/2025, 12:41:22 PM]:enhance the feature file \n\n
+
+roost_feedback [08/07/2025, 12:45:20 PM]:enhance the feature file \n
 */
 
 // ********RoostGPT********
@@ -21,6 +23,8 @@ Background:
   And the response format is set to JSON
   And the request logging is enabled for debugging purposes
   And error responses are captured for analysis
+  And rate limiting parameters are configured appropriately
+  And response validation schemas are loaded
 
 Scenario: Search for videos by keyword
   When I send a GET request to "/search" with the following parameters:
@@ -38,6 +42,8 @@ Scenario: Search for videos by keyword
   And the response should contain exactly 5 items
   And the response headers should contain valid cache control directives
   And the response should be properly formatted according to the YouTube API schema
+  And the etag in the response should be a non-empty string
+  And the response should include a pageInfo object with totalResults and resultsPerPage
 
 Scenario: Get video details by ID
   When I send a GET request to "/videos" with the following parameters:
@@ -52,6 +58,8 @@ Scenario: Get video details by ID
   And the video statistics should include like count and comment count
   And the video should have a valid embed HTML
   And the video's privacy status should be "public"
+  And the video's license information should be present
+  And the contentDetails should include information about content rating
 
 Scenario: Handle invalid API key
   Given the authorization header is set with an invalid API key "AIzaSyInvalidKeyExample123456789"
@@ -64,6 +72,8 @@ Scenario: Handle invalid API key
   And the error message should contain "API key not valid. Please pass a valid API key"
   And the response should include a reference to the API documentation
   And the response time should be less than 1 second
+  And the response should include a detailed error code
+  And the response content type should be "application/json"
 
 Scenario: Verify pagination of search results
   When I send a GET request to "/search" with the following parameters:
@@ -87,6 +97,8 @@ Scenario: Verify pagination of search results
   And the total results count should be greater than the maxResults parameter
   And the response should contain a valid prevPageToken matching the first request
   And navigating through 3 pages should return unique results
+  And the pageInfo.totalResults should be consistent across pagination requests
+  And the regionCode in the response should match the expected region
 
 Scenario: Filter videos by publish date
   When I send a GET request to "/search" with the following parameters:
@@ -101,6 +113,8 @@ Scenario: Filter videos by publish date
   And all videos in the response should have been published before "2023-01-01"
   And the response should contain a list of videos
   And the videos should be sorted by relevance by default
+  And each video's publishedAt timestamp should be in ISO 8601 format
+  And the response should include videos from various channels
 
 Scenario: Get channel information
   When I send a GET request to "/channels" with the following parameters:
@@ -114,6 +128,9 @@ Scenario: Get channel information
   And the channel should have valid thumbnail images
   And the channel's branding settings should include a banner image URL
   And the channel's country of origin should be specified
+  And the channel's custom URL should be present if available
+  And the channel's topic categories should be listed if available
+  And the channel's creation date should be in ISO 8601 format
 
 Scenario: Handle resource not found
   When I send a GET request to "/videos" with the following parameters:
@@ -124,6 +141,8 @@ Scenario: Handle resource not found
   And the response should include a valid kind property
   And the response should include a valid etag
   And the response should not contain any error messages
+  And the pageInfo.totalResults should be 0
+  And the response time should be less than 1 second
 
 Scenario: Rate limiting behavior
   When I send 10 consecutive GET requests to "/search" with minimal delay
@@ -133,6 +152,8 @@ Scenario: Rate limiting behavior
   And the quota usage information should be present in the response
   And the error response should include a retry-after header if rate limited
   And the error message should provide guidance on quota management
+  And the error response should include a quotaExceeded error code if applicable
+  And the response should include information about daily quota limits
 
 Scenario: Search videos by category
   When I send a GET request to "/search" with the following parameters:
@@ -145,6 +166,8 @@ Scenario: Search videos by category
   And all videos in the response should belong to category ID 28
   And the response should contain a list of videos
   And each video should have relevant tags related to the search query
+  And the response should include category-specific metadata
+  And the video snippets should contain relevant category information
 
 Scenario: Get related videos
   When I send a GET request to "/search" with the following parameters:
@@ -156,6 +179,9 @@ Scenario: Get related videos
   And the response should contain a list of related videos
   And the videos should be topically related to the specified video
   And none of the videos should have the same ID as the relatedToVideoId
+  And the related videos should share similar tags or categories
+  And the response should include relevance information for each video
+  And the related videos should have similar content characteristics
 
 Scenario: Search for live streams
   When I send a GET request to "/search" with the following parameters:
@@ -166,3 +192,32 @@ Scenario: Search for live streams
   Then the response status code should be 200
   And all videos in the response should have a live broadcast content status
   And the response should include live streaming details for each video
+  And each live stream should have a concurrent viewer count if available
+  And the live streams should include scheduled start times
+  And the response should indicate if the stream is currently active
+
+Scenario: Verify video comments
+  When I send a GET request to "/commentThreads" with the following parameters:
+    | part       | snippet,replies |
+    | videoId    | dQw4w9WgXcQ     |
+    | maxResults | 10              |
+  Then the response status code should be 200
+  And the response should contain a list of comment threads
+  And each comment should have an author, text, and publication date
+  And the comments should be sorted by relevance by default
+  And the response should include reply counts for each comment thread
+  And top-level comments with replies should include reply data
+  And comment timestamps should be in ISO 8601 format
+
+Scenario: Search for videos with specific duration
+  When I send a GET request to "/search" with the following parameters:
+    | part       | snippet       |
+    | q          | test automation |
+    | maxResults | 5             |
+    | type       | video         |
+    | videoDuration | medium     |
+  Then the response status code should be 200
+  And all videos in the response should have a medium duration
+  And the response should contain a list of videos
+  And each video should have duration information in the contentDetails
+  And the videos should match the search query criteria
