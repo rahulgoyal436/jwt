@@ -1,0 +1,44 @@
+{
+  "scenarios": [
+    {
+      "type": "functional",
+      "title": "Verify Git Config Modification Prevention",
+      "description": "Ensure RoostGPT CLI does not modify system's GIT configuration with credentials from .env file.",
+      "testId": "TC-001",
+      "testDescription": "Test that RoostGPT CLI does not alter the 'user.name' and 'user.email' in the system's GIT configuration when executed.",
+      "prerequisites": "Ensure the ~/.git-credentials file is removed. Prepare multiple .env files with different git credentials.",
+      "stepsToPerform": "1. Remove ~/.git-credentials file.\n2. Prepare .env file with specific git credentials.\n3. Execute RoostGPT CLI using the prepared .env file.\n4. Check the system's GIT configuration for 'user.name' and 'user.email'.",
+      "expectedResult": "The system's GIT configuration remains unchanged, and 'user.name' and 'user.email' are not modified."
+    },
+    {
+      "type": "functional",
+      "title": "Environment-Specific Credential Handling",
+      "description": "Verify that RoostGPT CLI uses credentials from the .env file without altering system settings.",
+      "testId": "TC-002",
+      "testDescription": "Ensure that RoostGPT CLI uses the credentials from the .env file for its operations without modifying the system's GIT configuration.",
+      "prerequisites": "Create .env files with different git credentials for testing.",
+      "stepsToPerform": "1. Prepare .env file with specific git credentials.\n2. Execute RoostGPT CLI using the prepared .env file.\n3. Perform a git operation using RoostGPT CLI.\n4. Verify that the operation uses the credentials from the .env file.",
+      "expectedResult": "The git operation is performed using the credentials from the .env file, and the system's GIT configuration remains unchanged."
+    },
+    {
+      "type": "non-functional",
+      "title": "Performance Under Multiple Environment Files",
+      "description": "Assess the performance of RoostGPT CLI when switching between multiple .env files.",
+      "testId": "TC-003",
+      "testDescription": "Evaluate the time taken and resource usage when RoostGPT CLI is executed with different .env files consecutively.",
+      "prerequisites": "Prepare multiple .env files with different git credentials.",
+      "stepsToPerform": "1. Execute RoostGPT CLI with the first .env file.\n2. Record the time taken and resource usage.\n3. Repeat the process with additional .env files.\n4. Compare the performance metrics.",
+      "expectedResult": "RoostGPT CLI should perform consistently with minimal time variation and resource usage across different .env files."
+    },
+    {
+      "type": "non-functional",
+      "title": "Security of Credential Handling",
+      "description": "Ensure that credentials from the .env file are not exposed or logged during RoostGPT CLI execution.",
+      "testId": "TC-004",
+      "testDescription": "Verify that sensitive information from the .env file is not logged or exposed in any form during the execution of RoostGPT CLI.",
+      "prerequisites": "Prepare a .env file with dummy sensitive credentials.",
+      "stepsToPerform": "1. Execute RoostGPT CLI with the .env file containing dummy credentials.\n2. Monitor logs and output for any exposure of credentials.\n3. Check system logs and temporary files for credential leakage.",
+      "expectedResult": "No credentials from the .env file should be visible in logs, output, or any temporary files."
+    }
+  ]
+}

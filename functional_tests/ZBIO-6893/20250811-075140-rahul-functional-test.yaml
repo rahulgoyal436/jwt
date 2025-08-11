@@ -1,0 +1,64 @@
+openapi: 3.0.3
+info:
+  title: RoostGPT CLI API
+  description: API for testing RoostGPT CLI functionality and performance.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /execute:
+    post:
+      summary: Execute RoostGPT CLI with .env file
+      description: Executes the RoostGPT CLI using a specified .env file and performs operations.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                envFile:
+                  type: string
+                  description: Path to the .env file to be used for execution.
+      responses:
+        '200':
+          description: Execution successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  gitConfigUnchanged:
+                    type: boolean
+                  credentialsUsed:
+                    type: boolean
+                  performanceMetrics:
+                    type: object
+                    properties:
+                      timeTaken:
+                        type: string
+                      resourceUsage:
+                        type: string
+                  securityCheck:
+                    type: object
+                    properties:
+                      credentialsVisible:
+                        type: boolean
+                      logsSecure:
+                        type: boolean
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
